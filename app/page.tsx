@@ -40,7 +40,7 @@ export default async function HomePage() {
         {/* Video Background */}
         <div className="absolute inset-0">
           <HeroVideo 
-            src="/LocraHero.mp4" 
+            src="https://5kynenqtmmcueqop.public.blob.vercel-storage.com/LocraHero.mp4" 
             className="w-full h-full"
           />
           {/* Overlay for text readability */}
