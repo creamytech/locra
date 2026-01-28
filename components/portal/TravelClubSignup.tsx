@@ -26,23 +26,23 @@ export function TravelClubSignup() {
   };
 
   return (
-    <div className="relative p-8 md:p-12 rounded-2xl border border-border/50 bg-gradient-to-br from-card via-background to-card/50 text-center">
+    <div className="relative p-8 md:p-12 rounded-2xl border border-stone-200 bg-white text-center">
       {/* Decorative corners */}
-      <div className="absolute top-4 left-4 w-8 h-8 border-t border-l border-primary/30" />
-      <div className="absolute top-4 right-4 w-8 h-8 border-t border-r border-primary/30" />
-      <div className="absolute bottom-4 left-4 w-8 h-8 border-b border-l border-primary/30" />
-      <div className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-primary/30" />
+      <div className="absolute top-4 left-4 w-8 h-8 border-t border-l border-gold/30" />
+      <div className="absolute top-4 right-4 w-8 h-8 border-t border-r border-gold/30" />
+      <div className="absolute bottom-4 left-4 w-8 h-8 border-b border-l border-gold/30" />
+      <div className="absolute bottom-4 right-4 w-8 h-8 border-b border-r border-gold/30" />
 
       <Badge variant="edition" className="mb-4">
         Travel Club
       </Badge>
-      <h2 className="font-serif text-3xl md:text-4xl mb-4">Join the Journey</h2>
-      <p className="text-muted-foreground max-w-md mx-auto mb-8">
+      <h2 className="font-serif text-3xl md:text-4xl mb-4 text-stone-900">Join the Journey</h2>
+      <p className="text-stone-500 max-w-md mx-auto mb-8 font-light">
         Join the Travel Club for early access and destination releases.
       </p>
 
       {status === "success" ? (
-        <div className="text-primary font-medium">
+        <div className="text-gold font-medium">
           Welcome to the Travel Club. Your journey begins soon.
         </div>
       ) : (
@@ -53,7 +53,7 @@ export function TravelClubSignup() {
           <Input
             type="email"
             placeholder="Enter your email"
-            className="flex-1"
+            className="flex-1 border-stone-200 focus:ring-gold"
             aria-label="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -66,7 +66,7 @@ export function TravelClubSignup() {
         </form>
       )}
 
-      <p className="text-xs text-muted-foreground mt-4">
+      <p className="text-xs text-stone-400 mt-4">
         No spam. Unsubscribe anytime.
       </p>
     </div>

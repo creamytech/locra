@@ -41,10 +41,19 @@ function getEnv(): Env {
   });
 
   if (!parsed.success) {
-    console.error("❌ Invalid environment variables:");
-    parsed.error.issues.forEach((issue) => {
-      console.error(`  - ${issue.path.join(".")}: ${issue.message}`);
-    });
+    if (process.env.NODE_ENV === "development") {
+      console.error("❌ Invalid environment variables:");
+      parsed.error.issues.forEach((issue) => {
+        console.error(`  - ${issue.path.join(".")}: ${issue.message}`);
+      });
+      // In development, return a placeholder instead of crashing the entire build process
+      // This helps developers see the UI even if the API isn't ready
+      return {
+        NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: "example.myshopify.com",
+        NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN: "placeholder",
+        NEXT_PUBLIC_SHOPIFY_API_VERSION: "2024-01",
+      } as Env;
+    }
     throw new Error("Invalid environment variables. Check console for details.");
   }
 

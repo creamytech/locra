@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Minus, Plus, Trash2, Loader2 } from "lucide-react";
+import { Minus, Plus, Trash2, Loader2, Luggage, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -10,10 +10,12 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
+  SheetClose,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "./CartProvider";
 import { formatPrice } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface CartDrawerProps {
   open: boolean;
@@ -27,134 +29,109 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="flex flex-col w-full sm:max-w-lg">
-        <SheetHeader>
-          <SheetTitle className="font-serif text-xl tracking-wide">
-            Your Suitcase
-          </SheetTitle>
-          <SheetDescription>
-            {isEmpty
-              ? "Your journey awaits"
-              : `${cart.totalQuantity} ${cart.totalQuantity === 1 ? "artifact" : "artifacts"} ready for departure`}
-          </SheetDescription>
-        </SheetHeader>
+      <SheetContent className="flex flex-col w-full sm:max-w-md bg-[#F9F8F6] border-l border-stone-200 p-0 overflow-hidden">
+        {/* Custom Header */}
+        <div className="p-8 pb-4 flex items-center justify-between">
+          <div className="space-y-1">
+            <h2 className="font-serif text-3xl italic text-stone-900">Your Suitcase</h2>
+            <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-stone-400">
+              {isEmpty ? "Journey Pending" : "Manifest for Departure"}
+            </p>
+          </div>
+          <SheetClose asChild>
+            <Button variant="ghost" size="icon" className="hover:bg-stone-100 rounded-full">
+              <X className="w-5 h-5 text-stone-400" />
+            </Button>
+          </SheetClose>
+        </div>
 
-        <Separator className="my-4" />
+        <Separator className="bg-stone-100 mx-8 w-auto" />
 
-        {/* Cart Contents */}
-        <div className="flex-1 overflow-y-auto">
+        {/* Contents */}
+        <div className="flex-1 overflow-y-auto px-8 py-8 custom-scrollbar">
           {isEmpty ? (
-            <div className="flex flex-col items-center justify-center h-full text-center py-12">
-              <div className="w-24 h-24 rounded-full bg-muted/50 flex items-center justify-center mb-6">
-                <svg
-                  className="w-10 h-10 text-muted-foreground"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                  />
-                </svg>
+            <div className="h-full flex flex-col items-center justify-center text-center space-y-8">
+              <div className="relative">
+                <Luggage className="w-16 h-16 text-stone-200" strokeWidth={1} />
+                <div className="absolute inset-0 animate-ping opacity-20">
+                  <Luggage className="w-16 h-16 text-gold" strokeWidth={1} />
+                </div>
               </div>
-              <p className="text-muted-foreground mb-2">
-                Your suitcase is empty.
-              </p>
-              <p className="text-sm text-muted-foreground mb-6">
-                Enter a destination to begin your journey.
-              </p>
-              <Button asChild onClick={() => onOpenChange(false)}>
+              <div className="space-y-4">
+                <p className="font-serif text-xl italic text-stone-400">
+                  Your suitcase is empty.
+                </p>
+                <p className="text-xs text-stone-400 max-w-[200px] leading-relaxed">
+                  Enter the Atlas and discover your first wearable artifact.
+                </p>
+              </div>
+              <Button asChild onClick={() => onOpenChange(false)} className="rounded-none bg-stone-900 text-white hover:bg-gold px-8">
                 <Link href="/">Explore Destinations</Link>
               </Button>
             </div>
           ) : (
-            <ul className="space-y-4">
+            <ul className="space-y-8">
               {cart.lines.map((line) => (
-                <li key={line.id} className="flex gap-4">
-                  {/* Product Image */}
+                <li key={line.id} className="group flex gap-6 animate-fade-in">
+                  {/* Image with Arch Masking Style */}
                   <Link
                     href={`/products/${line.merchandise.product.handle}`}
-                    className="relative h-24 w-20 flex-shrink-0 overflow-hidden rounded-md bg-muted"
+                    className="relative h-28 w-24 flex-shrink-0 overflow-hidden bg-white border border-stone-100"
+                    style={{ borderRadius: "2rem 2rem 0 0" }}
                     onClick={() => onOpenChange(false)}
                   >
                     {line.merchandise.product.featuredImage ? (
                       <Image
                         src={line.merchandise.product.featuredImage.url}
-                        alt={
-                          line.merchandise.product.featuredImage.altText ||
-                          line.merchandise.product.title
-                        }
+                        alt={line.merchandise.product.title}
                         fill
-                        className="object-cover"
-                        sizes="80px"
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        sizes="100px"
                       />
                     ) : (
-                      <div className="w-full h-full bg-stone-200" />
+                      <div className="w-full h-full bg-stone-50" />
                     )}
                   </Link>
 
-                  {/* Product Details */}
-                  <div className="flex flex-1 flex-col justify-between">
-                    <div>
+                  {/* Details */}
+                  <div className="flex flex-1 flex-col justify-between py-1">
+                    <div className="space-y-1">
                       <Link
                         href={`/products/${line.merchandise.product.handle}`}
-                        className="font-medium text-sm hover:text-primary transition-colors"
+                        className="font-serif text-base text-stone-900 hover:text-gold transition-colors"
                         onClick={() => onOpenChange(false)}
                       >
                         {line.merchandise.product.title}
                       </Link>
                       {line.merchandise.title !== "Default Title" && (
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-[10px] uppercase tracking-widest text-stone-400">
                           {line.merchandise.title}
                         </p>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      {/* Quantity Controls */}
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-7 w-7"
-                          onClick={() =>
-                            line.quantity === 1
-                              ? removeItem(line.id)
-                              : updateItem(line.id, line.quantity - 1)
-                          }
+                    <div className="flex items-center justify-between pt-4">
+                      {/* Premium Quantity Controls */}
+                      <div className="flex items-center border border-stone-200 bg-white">
+                        <button
+                          className="p-2 hover:bg-stone-50 disabled:opacity-30"
+                          onClick={() => line.quantity === 1 ? removeItem(line.id) : updateItem(line.id, line.quantity - 1)}
                           disabled={isLoading}
-                          aria-label="Decrease quantity"
                         >
-                          {line.quantity === 1 ? (
-                            <Trash2 className="h-3 w-3" />
-                          ) : (
-                            <Minus className="h-3 w-3" />
-                          )}
-                        </Button>
-                        <span className="w-8 text-center text-sm font-medium">
-                          {line.quantity}
-                        </span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-7 w-7"
+                          {line.quantity === 1 ? <Trash2 className="w-3 h-3 text-stone-400" /> : <Minus className="w-3 h-3 text-stone-400" />}
+                        </button>
+                        <span className="w-8 text-center text-[10px] font-bold text-stone-900">{line.quantity}</span>
+                        <button
+                          className="p-2 hover:bg-stone-50 disabled:opacity-30"
                           onClick={() => updateItem(line.id, line.quantity + 1)}
                           disabled={isLoading}
-                          aria-label="Increase quantity"
                         >
-                          <Plus className="h-3 w-3" />
-                        </Button>
+                          <Plus className="w-3 h-3 text-stone-400" />
+                        </button>
                       </div>
 
-                      {/* Line Total */}
-                      <p className="text-sm font-medium">
-                        {formatPrice(
-                          line.cost.totalAmount.amount,
-                          line.cost.totalAmount.currencyCode
-                        )}
+                      <p className="text-sm font-light text-stone-900">
+                        {formatPrice(line.cost.totalAmount.amount, line.cost.totalAmount.currencyCode)}
                       </p>
                     </div>
                   </div>
@@ -164,34 +141,33 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
           )}
         </div>
 
-        {/* Footer with Total and Checkout */}
+        {/* Footer */}
         {!isEmpty && (
-          <div className="border-t pt-4 mt-4 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Subtotal</span>
-              <span className="font-medium">
-                {formatPrice(
-                  cart.cost.subtotalAmount.amount,
-                  cart.cost.subtotalAmount.currencyCode
-                )}
-              </span>
+          <div className="p-8 bg-white border-t border-stone-200 space-y-6">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] uppercase tracking-[0.2em] font-medium text-stone-400">Subtotal</span>
+                <span className="text-xl font-light text-stone-900">
+                  {formatPrice(cart.cost.subtotalAmount.amount, cart.cost.subtotalAmount.currencyCode)}
+                </span>
+              </div>
+              <p className="text-[9px] text-stone-400 italic">
+                Customs, duties, and logistics calculated at departure.
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground text-center">
-              Shipping and taxes calculated at checkout
-            </p>
+            
             <Button
-              className="w-full"
-              size="lg"
+              className="w-full h-14 rounded-none bg-stone-900 text-white hover:bg-gold uppercase tracking-[0.2em] text-[10px] font-bold transition-all duration-500 shadow-xl"
               onClick={checkout}
               disabled={isLoading}
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Loading...
-                </>
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                "Proceed to Departure"
+                <span className="flex items-center gap-3">
+                  Proceed to Departure
+                  <X className="w-4 h-4 rotate-45" />
+                </span>
               )}
             </Button>
           </div>

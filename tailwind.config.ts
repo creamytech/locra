@@ -26,6 +26,7 @@ const config: Config = {
         },
         // Primary gold accent
         gold: {
+          DEFAULT: "#B8860B", // DarkGoldenrod - the main gold
           50: "#FFFBEB",
           100: "#FEF3C7",
           200: "#FDE68A",
@@ -117,6 +118,7 @@ const config: Config = {
         "glow-pulse": "glow-pulse 3s ease-in-out infinite",
         "fade-in": "fade-in 0.5s ease-out",
         "slide-up": "slide-up 0.5s ease-out",
+        "spin-slow": "spin 8s linear infinite",
       },
     },
   },

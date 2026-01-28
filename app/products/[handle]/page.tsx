@@ -12,8 +12,11 @@ import {
 } from "@/components/ui/accordion";
 import { PortalArchFrame } from "@/components/portal/PortalArch";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
-import { getProductByHandle } from "@/lib/shopify";
+import { ArtifactCard } from "@/components/product/ArtifactCard";
+import { getProductByHandle, getCollectionByHandle } from "@/lib/shopify";
 import { formatPrice, cleanCopy } from "@/lib/utils";
+import { DESTINATIONS } from "@/lib/data/atlas";
+import { MapPin, Luggage, History, ArrowRight } from "lucide-react";
 
 interface ProductPageProps {
   params: Promise<{ handle: string }>;
@@ -25,30 +28,11 @@ export async function generateMetadata({
   const { handle } = await params;
   const product = await getProductByHandle(handle);
 
-  if (!product) {
-    return {
-      title: "Artifact Not Found",
-    };
-  }
+  if (!product) return { title: "Artifact Not Found" };
 
   return {
-    title: product.seo?.title || product.title,
-    description:
-      product.seo?.description || product.description.substring(0, 160),
-    openGraph: {
-      title: `${product.title} | LOCRA`,
-      description: product.description.substring(0, 200),
-      images: product.featuredImage
-        ? [
-            {
-              url: product.featuredImage.url,
-              width: product.featuredImage.width,
-              height: product.featuredImage.height,
-              alt: product.featuredImage.altText || product.title,
-            },
-          ]
-        : [],
-    },
+    title: `${product.title} | LOCRA Archival`,
+    description: product.description.substring(0, 160),
   };
 }
 
@@ -56,71 +40,70 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { handle } = await params;
   const product = await getProductByHandle(handle);
 
-  if (!product) {
-    notFound();
-  }
+  if (!product) notFound();
 
   const price = product.priceRange.minVariantPrice;
-  const hasEditionTag = product.tags.some((tag) =>
-    tag.toLowerCase().includes("edition")
-  );
-
-  // Clean description copy (remove em dashes per brand guidelines)
+  const hasEditionTag = product.tags.some((tag) => tag.toLowerCase().includes("edition"));
   const cleanDescription = cleanCopy(product.description);
 
+  // Find destination handle from tags or product type
+  const destTag = product.tags.find(tag => DESTINATIONS.some(d => d.handle === tag.toLowerCase()));
+  const destination = DESTINATIONS.find(d => d.handle === destTag?.toLowerCase());
+
+  // Fetch related from destination if available
+  const destinationCollection = destTag ? await getCollectionByHandle(destTag.toLowerCase(), 4) : null;
+  const relatedProducts = destinationCollection?.products.filter(p => p.id !== product.id).slice(0, 3) || [];
+
   return (
-    <div className="flex flex-col">
-      {/* Breadcrumb */}
-      <div className="container-wide py-4 border-b border-border/50">
-        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-foreground transition-colors">
-            Home
-          </Link>
-          <span>/</span>
-          <span className="text-foreground">{product.title}</span>
+    <div className="flex flex-col bg-white">
+      {/* 1. ARCHIVAL HEADER (BREADCRUMB) */}
+      <div className="container-wide py-6 border-b border-stone-100 flex justify-between items-center">
+        <nav className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] font-medium text-stone-400">
+          <Link href="/artifacts" className="hover:text-stone-900 transition-colors">The Archive</Link>
+          <span className="text-stone-200">/</span>
+          {destination && (
+            <>
+              <Link href={`/destinations/${destination.handle}`} className="hover:text-stone-900 transition-colors">{destination.name}</Link>
+              <span className="text-stone-200">/</span>
+            </>
+          )}
+          <span className="text-stone-900">{product.title}</span>
         </nav>
       </div>
 
-      {/* Main Product Section */}
+      {/* 2. MAIN ARTIFACT DISPLAY */}
       <section className="section-spacing">
         <div className="container-wide">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-            {/* Left: Product Images */}
-            <div className="space-y-4">
-              {/* Main Image */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 xl:gap-24">
+            
+            {/* Left: Gallery (Scale: 7 columns) */}
+            <div className="lg:col-span-7 space-y-8">
               <PortalArchFrame glowEnabled className="w-full">
-                <div className="relative aspect-[3/4]">
+                <div className="relative aspect-[4/5] bg-stone-50">
                   {product.featuredImage ? (
                     <Image
                       src={product.featuredImage.url}
                       alt={product.featuredImage.altText || product.title}
                       fill
                       className="object-cover"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
                       priority
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-b from-stone-100 to-stone-200 flex items-center justify-center">
-                      <span className="text-stone-400">No image available</span>
-                    </div>
+                    <div className="w-full h-full flex items-center justify-center text-stone-300 italic font-serif">Image Pending</div>
                   )}
                 </div>
               </PortalArchFrame>
 
-              {/* Thumbnail Gallery */}
+              {/* Detail Thumbnails */}
               {product.images.length > 1 && (
-                <div className="grid grid-cols-4 gap-2">
-                  {product.images.slice(0, 4).map((image, index) => (
-                    <div
-                      key={image.id}
-                      className="relative aspect-square rounded-lg overflow-hidden border border-border/50 bg-muted"
-                    >
+                <div className="grid grid-cols-3 gap-4">
+                  {product.images.slice(1, 4).map((image) => (
+                    <div key={image.id} className="relative aspect-square bg-stone-50 overflow-hidden rounded-sm">
                       <Image
                         src={image.url}
-                        alt={image.altText || `${product.title} - Image ${index + 1}`}
+                        alt={image.altText || product.title}
                         fill
                         className="object-cover"
-                        sizes="100px"
                       />
                     </div>
                   ))}
@@ -128,88 +111,124 @@ export default async function ProductPage({ params }: ProductPageProps) {
               )}
             </div>
 
-            {/* Right: Product Details */}
-            <div className="lg:py-8">
-              <div className="sticky top-24 space-y-6">
-                {/* Badges */}
-                <div className="flex items-center gap-2">
-                  {hasEditionTag && <Badge variant="edition">Edition</Badge>}
-                  {product.productType && (
-                    <Badge variant="outline">{product.productType}</Badge>
-                  )}
+            {/* Right: Curated Details (Scale: 5 columns) */}
+            <div className="lg:col-span-5">
+              <div className="sticky top-32 space-y-8">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    {destination && (
+                      <Badge variant="outline" className="border-stone-200 text-stone-500 font-medium px-3 flex items-center gap-1.5">
+                        <MapPin className="w-3 h-3 text-gold" />
+                        {destination.name}
+                      </Badge>
+                    )}
+                    {hasEditionTag && <Badge variant="edition">Limited Edition</Badge>}
+                  </div>
+
+                  <h1 className="font-serif text-4xl md:text-5xl tracking-tight leading-tight">
+                    {product.title}
+                  </h1>
+                  
+                  <div className="flex items-center justify-between">
+                    <p className="text-2xl font-light text-stone-900">
+                      {formatPrice(price.amount, price.currencyCode)}
+                    </p>
+                    <span className="text-[10px] uppercase font-mono tracking-tighter text-stone-300">
+                      Specimen no. {product.id.split('/').pop()?.slice(-8)}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Title */}
-                <h1 className="font-serif text-3xl md:text-4xl tracking-tight">
-                  {product.title}
-                </h1>
+                <div className="prose prose-stone prose-sm">
+                  <p className="text-stone-600 leading-relaxed font-light italic">
+                    {cleanDescription}
+                  </p>
+                </div>
 
-                {/* Price */}
-                <p className="text-2xl font-light">
-                  {formatPrice(price.amount, price.currencyCode)}
-                </p>
+                <Separator className="bg-stone-100" />
 
-                {/* Short Description */}
-                <p className="text-muted-foreground leading-relaxed">
-                  {cleanDescription.substring(0, 200)}
-                  {cleanDescription.length > 200 ? "..." : ""}
-                </p>
+                {/* ADD TO SUITCASE MODULE */}
+                <div className="space-y-6">
+                  <AddToCartButton variants={product.variants} />
+                </div>
 
-                <Separator />
+                <Separator className="bg-stone-100" />
 
-                {/* Add to Cart */}
-                <AddToCartButton variants={product.variants} />
-
-                <Separator />
-
-                {/* Accordion Details */}
+                {/* ARCHIVAL ACCORDION */}
                 <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="details">
-                    <AccordionTrigger className="text-base font-medium">
-                      Details
+                  <AccordionItem value="provenance" className="border-stone-100">
+                    <AccordionTrigger className="text-[10px] uppercase tracking-[0.2em] font-bold hover:no-underline">
+                      Provenance & Story
                     </AccordionTrigger>
-                    <AccordionContent>
-                      <div
-                        className="prose prose-stone prose-sm max-w-none"
-                        dangerouslySetInnerHTML={{
-                          __html: cleanCopy(product.descriptionHtml),
-                        }}
-                      />
+                    <AccordionContent className="text-stone-500 font-light leading-relaxed">
+                      This artifact was inspired by the specific atmospheric conditions of {destination?.name || "its origin"}. 
+                      The materials were chosen to reflect the tactile heritage and timeless elegance of the {destination?.region || "region"}.
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="shipping">
-                    <AccordionTrigger className="text-base font-medium">
-                      Shipping
+                  <AccordionItem value="packed" className="border-stone-100">
+                    <AccordionTrigger className="text-[10px] uppercase tracking-[0.2em] font-bold hover:no-underline">
+                      Packed For
                     </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-2 text-sm text-muted-foreground">
-                        <p>Free shipping on orders over $150.</p>
-                        <p>Standard delivery: 5-7 business days.</p>
-                        <p>Express delivery: 2-3 business days.</p>
-                        <p>
-                          International shipping available to select
-                          destinations.
-                        </p>
+                    <AccordionContent className="space-y-4 text-stone-500 font-light">
+                      <div className="flex gap-4 items-start">
+                        <Luggage className="w-4 h-4 text-gold shrink-0 mt-0.5" />
+                        <p>Evening strolls through the winding alleys of the old town.</p>
+                      </div>
+                      <div className="flex gap-4 items-start">
+                        <History className="w-4 h-4 text-gold shrink-0 mt-0.5" />
+                        <p>Long expeditions into coastal landscapes and ancient ruins.</p>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
 
-                  <AccordionItem value="care">
-                    <AccordionTrigger className="text-base font-medium">
-                      Care
+                  <AccordionItem value="care" className="border-stone-100">
+                    <AccordionTrigger className="text-[10px] uppercase tracking-[0.2em] font-bold hover:no-underline">
+                      Archival Care
                     </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-2 text-sm text-muted-foreground">
-                        <p>Handle with care as you would any treasured artifact.</p>
-                        <p>Store in a cool, dry place away from direct sunlight.</p>
-                        <p>Follow specific care instructions included with your piece.</p>
-                      </div>
+                    <AccordionContent className="text-stone-500 font-light leading-relaxed">
+                      Handle as you would any treasured specimen. Hand wash with cool water to preserve the integrity of the natural fibers.
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. RELATED ARTIFACTS FROM DESTINATION */}
+      {relatedProducts.length > 0 && (
+        <section className="section-spacing border-t border-stone-100 bg-[#F9F8F6]">
+          <div className="container-wide">
+            <div className="text-center mb-16">
+              <span className="text-[10px] tracking-[0.4em] font-medium text-stone-400 uppercase mb-4 block">
+                The {destination?.name || "Archival"} Capsule
+              </span>
+              <h2 className="font-serif text-4xl">Complete the Suitcase</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-5xl mx-auto">
+              {relatedProducts.map(p => (
+                <ArtifactCard key={p.id} product={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 4. TRAVEL CLUB CALLOUT */}
+      <section className="py-24 bg-white border-t border-stone-100">
+        <div className="container-narrow">
+          <div className="text-center">
+             <Link href="/travel-club" className="group">
+               <span className="text-[10px] tracking-[0.4em] font-medium text-stone-400 uppercase mb-4 block">Membership</span>
+               <h3 className="font-serif text-3xl italic group-hover:text-gold transition-colors">Join the Locra Travel Club</h3>
+               <div className="mt-8 flex justify-center">
+                 <div className="w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center group-hover:border-gold transition-colors">
+                   <ArrowRight className="w-4 h-4 text-stone-300 group-hover:text-gold group-hover:translate-x-1 transition-all" />
+                 </div>
+               </div>
+             </Link>
           </div>
         </div>
       </section>

@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
         hostname: "cdn.shopify.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+        pathname: "/**",
+      },
     ],
   },
   // Enable experimental features for better performance

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -6,152 +7,113 @@ import { HeroVideo } from "@/components/portal/HeroVideo";
 import { TravelClubSignup } from "@/components/portal/TravelClubSignup";
 import { ArtifactCard } from "@/components/product/ArtifactCard";
 import { getFeaturedProducts } from "@/lib/shopify";
-
-// Destination data
-const destinations = [
-  {
-    name: "Santorini",
-    handle: "santorini",
-    tagline: "Aegean blues and whitewashed dreams",
-    coordinates: "36.3932° N",
-  },
-  {
-    name: "Amalfi",
-    handle: "amalfi",
-    tagline: "Coastal elegance carved in stone",
-    coordinates: "40.6340° N",
-  },
-  {
-    name: "Kyoto",
-    handle: "kyoto",
-    tagline: "Where tradition breathes",
-    coordinates: "35.0116° N",
-  },
-];
+import { DESTINATIONS } from "@/lib/data/atlas";
+import { ArrowRight, Compass } from "lucide-react";
 
 export default async function HomePage() {
-  // Fetch featured products from Shopify
-  const featuredProducts = await getFeaturedProducts(3);
+  const featuredProducts = await getFeaturedProducts(6);
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section with Video */}
+      {/* 1. CINEMATIC PORTAL HERO */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Video Background */}
         <div className="absolute inset-0">
           <HeroVideo 
             src="https://5kynenqtmmcueqop.public.blob.vercel-storage.com/LocraHero.mp4" 
             className="w-full h-full"
           />
-          {/* Overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-stone-900/40 via-stone-900/20 to-stone-900/60" />
         </div>
 
-        {/* Hero Content */}
         <div className="container-narrow relative z-10 text-center py-20">
-          <p className="text-sm font-medium tracking-widest text-white/80 uppercase mb-4 animate-fade-in drop-shadow-md">
-            Locra Travel Club
+          <p className="text-[10px] items-center gap-3 inline-flex font-medium tracking-[0.3em] text-white/80 uppercase mb-6 animate-fade-in drop-shadow-md">
+            <span className="w-8 h-px bg-white/40" />
+            The Pursuit of Horizon
+            <span className="w-8 h-px bg-white/40" />
           </p>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-light tracking-tight mb-6 text-balance animate-slide-up text-white drop-shadow-lg">
-            Three destinations.
-            <br />
-            One portal.
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light tracking-tight mb-8 text-balance animate-slide-up text-white drop-shadow-2xl">
+            Entering the <br /> 
+            <span className="italic">Atlas</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-white/90 max-w-xl mx-auto mb-12 animate-fade-in drop-shadow-md">
-            Locra Travel Club curates wearable artifacts inspired by iconic
-            places.
+          <p className="text-lg md:text-2xl text-white/90 max-w-2xl mx-auto mb-12 animate-fade-in font-serif italic drop-shadow-md leading-relaxed">
+            Curated artifacts inspired by the world&apos;s most iconic destinations. 
+            Begin your journey through our gateway portals.
           </p>
 
-          {/* Portal Arch Frame - Decorative */}
-          <div className="flex justify-center mb-10">
-            <div className="relative w-32 h-40 md:w-40 md:h-52">
-              {/* Arch outline */}
-              <div 
-                className="absolute inset-0 border-2 border-white/30 backdrop-blur-sm"
-                style={{ borderRadius: "999px 999px 0 0" }}
-              />
-              {/* Glow effect */}
-              <div 
-                className="absolute inset-0 animate-glow-pulse"
-                style={{ 
-                  borderRadius: "999px 999px 0 0",
-                  boxShadow: "0 0 60px 20px rgba(212, 168, 83, 0.2)"
-                }}
-              />
-              {/* Inner content */}
-              <div className="absolute inset-4 flex items-center justify-center">
-                <span className="font-serif text-lg md:text-xl text-white/70 tracking-[0.3em]">
-                  ENTER
-                </span>
-              </div>
-            </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-in">
+            <Button asChild size="xl" className="rounded-none px-12 bg-white text-stone-900 hover:bg-gold hover:text-white transition-all duration-500 border-none">
+              <Link href="#atlas">Discover the Atlas</Link>
+            </Button>
+            <Button asChild variant="outline" size="xl" className="rounded-none px-12 border-white/40 text-white backdrop-blur-sm hover:bg-white/10">
+              <Link href="/artifacts">The Archive</Link>
+            </Button>
           </div>
-
-          <Button asChild size="xl" className="animate-fade-in bg-white/10 backdrop-blur-sm border border-white/30 text-white hover:bg-white/20">
-            <Link href="#destinations">Enter the Atlas</Link>
-          </Button>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-          <span className="text-xs text-white/60 tracking-widest uppercase">Scroll</span>
-          <svg 
-            className="w-5 h-5 text-white/60" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
+        {/* Scroll Waypoint */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 animate-fade-in">
+          <div className="w-px h-24 bg-gradient-to-b from-white/0 via-white/40 to-white/0" />
+          <span className="text-[10px] text-white/40 tracking-[0.2em] uppercase">Scale to Explore</span>
         </div>
       </section>
 
-      {/* Destinations Section */}
-      <section id="destinations" className="section-spacing bg-background">
+      {/* 2. THE ATLAS GATEWAY GRID */}
+      <section id="atlas" className="section-spacing bg-[#F9F8F6]">
         <div className="container-wide">
-          <div className="text-center mb-12">
-            <Badge variant="coordinates" className="mb-4">
-              41.9028° N, 12.4964° E
-            </Badge>
-            <h2 className="font-serif text-3xl md:text-4xl mb-4">
-              Choose Your Destination
-            </h2>
-            <p className="text-muted-foreground max-w-md mx-auto">
-              Each portal leads to a curated collection of wearable artifacts.
-            </p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+            <div className="max-w-xl">
+              <Badge variant="outline" className="mb-4 border-stone-200 text-stone-400 px-3 py-1 text-[10px] uppercase tracking-widest">
+                Gateway Index 01-04
+              </Badge>
+              <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight">
+                Select Your <br /> Destination
+              </h2>
+              <p className="text-stone-500 leading-relaxed font-light">
+                Each destination is a world unto itself. Explore artifacts woven from the spirit, heritage, and atmosphere of these specific regions.
+              </p>
+            </div>
+            <Link href="/atlas" className="group flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-stone-400 hover:text-gold transition-colors">
+              View Full Atlas <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {destinations.map((dest, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {DESTINATIONS.map((dest, index) => (
               <Link
                 key={dest.handle}
                 href={`/destinations/${dest.handle}`}
-                className="group"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="group relative flex flex-col"
               >
-                <div className="relative p-8 border border-border/50 rounded-lg bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:-translate-y-1">
-                  {/* Subtle glow on hover */}
-                  <div className="absolute inset-0 rounded-lg bg-gradient-to-b from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                  <div className="relative">
-                    <Badge
-                      variant="coordinates"
-                      className="mb-4 text-[9px] tracking-wider"
-                    >
+                <div className="relative aspect-[3/4] mb-6 overflow-hidden rounded-sm">
+                  <Image
+                    src={dest.thumbnailUrl}
+                    alt={dest.name}
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                  />
+                  {/* Subtle Arch Mask / Overlay */}
+                  <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-stone-900/0 transition-colors duration-500" />
+                  
+                  {/* Coordinates Overlay */}
+                  <div className="absolute top-4 left-4">
+                    <span className="text-[10px] font-mono text-white/80 tracking-tighter drop-shadow-sm">
                       {dest.coordinates}
-                    </Badge>
-                    <h3 className="font-serif text-2xl mb-2 group-hover:text-primary transition-colors">
-                      {dest.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-6">
-                      {dest.tagline}
-                    </p>
-                    <Button variant="outline" size="sm" className="w-full">
-                      Enter {dest.name}
-                    </Button>
+                    </span>
                   </div>
+                </div>
+
+                <div className="space-y-2 px-2">
+                  <p className="text-[10px] font-medium tracking-widest text-gold uppercase">
+                    {dest.region}
+                  </p>
+                  <h3 className="font-serif text-2xl group-hover:text-gold transition-colors duration-300">
+                    {dest.name}
+                  </h3>
+                  <p className="text-sm text-stone-500 font-light italic opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    {dest.poeticDescription}
+                  </p>
                 </div>
               </Link>
             ))}
@@ -159,136 +121,87 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <Separator className="divider-museum" />
-
-      {/* Featured Artifacts Section */}
-      <section className="section-spacing">
+      {/* 3. FEATURED ARTIFACTS - ARCHIVE PREVIEW */}
+      <section className="section-spacing bg-white">
         <div className="container-wide">
-          <div className="text-center mb-12">
-            <p className="text-sm font-medium tracking-widest text-muted-foreground uppercase mb-4">
-              The Collection
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl mb-4">
-              Featured Artifacts
-            </h2>
-            <p className="text-muted-foreground max-w-md mx-auto">
-              Curated pieces from our most sought-after destinations.
-            </p>
+          <div className="text-center mb-20">
+            <h2 className="font-serif text-4xl md:text-5xl mb-6">Latest from the Archive</h2>
+            <div className="w-16 h-px bg-gold mx-auto" />
           </div>
 
-          {featuredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {featuredProducts.map((product, index) => (
-                <ArtifactCard
-                  key={product.id}
-                  product={product}
-                  priority={index === 0}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">
-                Featured artifacts coming soon.
-              </p>
-            </div>
-          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
+            {featuredProducts.map((product) => (
+              <ArtifactCard key={product.id} product={product} />
+            ))}
+          </div>
 
-          <div className="text-center mt-12">
-            <Button asChild variant="outline" size="lg">
-              <Link href="/destinations/santorini">View All Artifacts</Link>
+          <div className="mt-24 text-center">
+            <Button asChild variant="outline" size="xl" className="rounded-none border-stone-200 text-stone-600 hover:border-gold hover:text-gold min-w-[240px]">
+              <Link href="/artifacts">Explore All Artifacts</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      <Separator className="divider-museum" />
+      {/* 4. EXPANDING WORLD - MAP SECTION */}
+      <section className="py-32 bg-stone-900 text-stone-100 overflow-hidden relative">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gold/20 via-transparent to-transparent" />
+          {/* Stylized Grid Lines */}
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, #D4A853 0.5px, transparent 0.5px)', backgroundSize: '40px 40px' }} />
+        </div>
 
-      {/* Atlas Map Section */}
-      <section className="section-spacing bg-stone-100/50">
-        <div className="container-wide">
-          <div className="text-center mb-12">
-            <p className="text-sm font-medium tracking-widest text-muted-foreground uppercase mb-4">
-              The Atlas
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl mb-4">
-              Your Journey Map
-            </h2>
-          </div>
-
-          {/* Stylized Map */}
-          <div className="relative max-w-4xl mx-auto aspect-[16/9] rounded-xl border border-border/50 bg-gradient-to-br from-stone-200/50 via-background to-stone-100/50 overflow-hidden">
-            {/* Map Grid Pattern */}
-            <svg
-              className="absolute inset-0 w-full h-full opacity-10"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <defs>
-                <pattern
-                  id="grid"
-                  width="40"
-                  height="40"
-                  patternUnits="userSpaceOnUse"
-                >
-                  <path
-                    d="M 40 0 L 0 0 0 40"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="0.5"
-                  />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-
-            {/* Decorative Lines */}
-            <svg
-              className="absolute inset-0 w-full h-full"
-              viewBox="0 0 800 450"
-              preserveAspectRatio="xMidYMid slice"
-            >
-              {/* Connection lines */}
-              <path
-                d="M 200,200 Q 400,150 500,250 T 650,180"
-                fill="none"
-                stroke="hsl(var(--primary))"
-                strokeWidth="1"
-                strokeDasharray="4 4"
-                opacity="0.3"
-              />
-            </svg>
-
-            {/* Portal Pins */}
-            <div className="absolute inset-0 flex items-center justify-around px-16">
-              {destinations.map((dest, i) => (
-                <Link
-                  key={dest.handle}
-                  href={`/destinations/${dest.handle}`}
-                  className="group flex flex-col items-center"
-                  style={{ transform: `translateY(${(i - 1) * 20}px)` }}
-                >
-                  <div className="relative">
-                    {/* Pin glow */}
-                    <div className="absolute inset-0 w-8 h-8 bg-primary/20 rounded-full blur-md group-hover:bg-primary/40 transition-colors" />
-                    {/* Pin */}
-                    <div className="relative w-8 h-8 bg-primary rounded-full flex items-center justify-center border-2 border-background shadow-lg group-hover:scale-110 transition-transform">
-                      <div className="w-2 h-2 bg-background rounded-full" />
-                    </div>
-                  </div>
-                  <span className="mt-3 text-sm font-medium">{dest.name}</span>
-                </Link>
-              ))}
-            </div>
+        <div className="container-narrow relative z-10 text-center">
+          <Compass className="w-12 h-12 text-gold mx-auto mb-8 animate-pulse" />
+          <h2 className="font-serif text-4xl md:text-5xl mb-8 leading-tight">An Expanding <br /> Point of View</h2>
+          <p className="text-stone-400 max-w-xl mx-auto mb-12 font-light leading-relaxed">
+            Locra is growing. From the ivory streets of Santorini to the lush paths of Kyoto, our Atlas is an ever-evolving map of inspiration. New destinations are currently being scouted for our next archival drop.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4 text-[10px] tracking-[0.3em] uppercase font-bold text-gold/60">
+            <span>Marrakech</span>
+            <span className="text-stone-700">•</span>
+            <span>Copenhagen</span>
+            <span className="text-stone-700">•</span>
+            <span>Provence</span>
+            <span className="text-stone-700">•</span>
+            <span>Tulum</span>
           </div>
         </div>
       </section>
 
-      <Separator className="divider-museum" />
-
-      {/* Travel Club Signup Section */}
-      <section className="section-spacing">
+      {/* 5. TRAVEL CLUB MEMBERSHIP */}
+      <section className="section-spacing bg-[#F9F8F6]">
         <div className="container-narrow">
           <TravelClubSignup />
+        </div>
+      </section>
+
+      {/* 6. JOURNAL PREVIEW */}
+      <section className="pb-32 bg-[#F9F8F6]">
+        <div className="container-wide">
+          <Separator className="mb-20 bg-stone-200" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div className="relative aspect-video rounded-sm overflow-hidden">
+              <Image 
+                src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=1200"
+                alt="Journal"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="space-y-8">
+              <Badge variant="outline" className="border-gold text-gold px-3 mb-2">The Journal</Badge>
+              <h2 className="font-serif text-4xl md:text-5xl">Moments <br /> Between Places</h2>
+              <p className="text-stone-500 font-light leading-relaxed">
+                The Locra Journal is where we document the stories that don&apos;t fit on a label. Read about the morning light in Kyoto or the coastal secrets of Amalfi.
+              </p>
+              <Button asChild variant="link" className="p-0 h-auto text-gold uppercase tracking-[0.2em] text-xs font-bold hover:gap-4 transition-all">
+                <Link href="/journal" className="inline-flex items-center gap-2">
+                  Read the Journal <ArrowRight className="w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
     </div>
