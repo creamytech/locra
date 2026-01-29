@@ -42,19 +42,25 @@ function getPool(): DatabasePool {
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { Pool } = require('pg');
-      let connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
+      const originalConnectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
       
       // Supabase and cloud Postgres providers require SSL with their own CA
       // The pg library's default SSL validation is too strict
-      // Strip sslmode from URL and configure SSL manually to avoid cert errors
-      const needsSSL = connectionString.includes('sslmode=') || 
-                       connectionString.includes('supabase') ||
+      // Check if SSL is needed before modifying the connection string
+      const needsSSL = originalConnectionString.includes('sslmode=') || 
+                       originalConnectionString.includes('.supabase.') ||
                        process.env.NODE_ENV === 'production';
       
-      // Remove sslmode parameter from connection string to avoid double-configuration
-      connectionString = connectionString.replace(/[?&]sslmode=[^&]*/g, '');
-      // Clean up any leftover ? at the end or && in the middle
-      connectionString = connectionString.replace(/\?&/g, '?').replace(/&&/g, '&').replace(/[?&]$/, '');
+      // Safely remove sslmode parameter using URL parser
+      let connectionString = originalConnectionString;
+      try {
+        const url = new URL(originalConnectionString);
+        url.searchParams.delete('sslmode');
+        connectionString = url.toString();
+      } catch {
+        // If URL parsing fails, use the original string
+        console.warn('Could not parse connection string as URL, using original');
+      }
       
       _pool = new Pool({
         connectionString,
