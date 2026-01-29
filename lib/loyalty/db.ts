@@ -42,22 +42,27 @@ function getPool(): DatabasePool {
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { Pool } = require('pg');
-      const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+      let connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL || '';
       
-      // Supabase and most cloud Postgres providers require SSL
-      // Use rejectUnauthorized: false to accept their CA certificates
-      const sslConfig = connectionString?.includes('supabase') || connectionString?.includes('ssl=true')
-        ? { rejectUnauthorized: false }
-        : process.env.NODE_ENV === 'production'
-          ? { rejectUnauthorized: false }
-          : false;
+      // Supabase and cloud Postgres providers require SSL with their own CA
+      // The pg library's default SSL validation is too strict
+      // Strip sslmode from URL and configure SSL manually to avoid cert errors
+      const needsSSL = connectionString.includes('sslmode=') || 
+                       connectionString.includes('supabase') ||
+                       process.env.NODE_ENV === 'production';
+      
+      // Remove sslmode parameter from connection string to avoid double-configuration
+      connectionString = connectionString.replace(/[?&]sslmode=[^&]*/g, '');
+      // Clean up any leftover ? at the end or && in the middle
+      connectionString = connectionString.replace(/\?&/g, '?').replace(/&&/g, '&').replace(/[?&]$/, '');
       
       _pool = new Pool({
         connectionString,
-        ssl: sslConfig,
+        // Disable strict certificate validation for cloud providers
+        ssl: needsSSL ? { rejectUnauthorized: false } : false,
         max: 20,
         idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 2000,
+        connectionTimeoutMillis: 5000,
       });
     } catch {
       // Return a stub pool for development without pg installed
