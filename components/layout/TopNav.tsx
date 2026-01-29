@@ -41,7 +41,7 @@ export function TopNav() {
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-500",
         isScrolled || isMegaMenuOpen
-          ? "border-b border-stone-200 bg-white/90 backdrop-blur-md"
+          ? "border-b border-stone-200 bg-white"
           : "bg-transparent border-transparent"
       )}
     >
@@ -67,7 +67,7 @@ export function TopNav() {
               className={cn(
                 "group flex items-center gap-1.5 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors outline-none",
                 isMegaMenuOpen ? "text-gold" : "text-stone-500 hover:text-stone-900",
-                !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white" : ""
+                !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white/80 hover:text-white" : ""
               )}
             >
               Destinations
@@ -80,7 +80,7 @@ export function TopNav() {
                 className={cn(
                   "text-[10px] font-medium tracking-[0.2em] uppercase transition-colors",
                   pathname === link.href ? "text-gold" : "text-stone-500 hover:text-stone-900",
-                  !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white text-opacity-80 hover:text-opacity-100" : ""
+                  !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white/80 hover:text-white" : ""
                 )}
               >
                 {link.name}
@@ -95,7 +95,7 @@ export function TopNav() {
             href="/about" 
             className={cn(
               "hidden md:block text-[10px] font-medium tracking-[0.2em] uppercase transition-colors",
-              !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white text-opacity-80 hover:text-opacity-100" : "text-stone-500 hover:text-stone-900"
+              !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white/80 hover:text-white" : "text-stone-500 hover:text-stone-900"
             )}
           >
             About

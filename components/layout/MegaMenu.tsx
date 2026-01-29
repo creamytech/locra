@@ -33,7 +33,7 @@ export function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-stone-900/10 backdrop-blur-sm z-[90]"
+            className="fixed inset-0 bg-stone-900/20 z-[90]"
           />
 
           {/* Menu Panel */}
