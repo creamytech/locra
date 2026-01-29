@@ -484,12 +484,12 @@ export async function getAvailableRewardsForAccount(accountId: string): Promise<
       r.active, r.sort_order as "sortOrder", r.icon
     FROM rewards r
     JOIN tiers t ON r.min_tier_id = t.id
-    JOIN tiers current_tier ON current_tier.id = $2
+    JOIN tiers current_tier ON current_tier.id = $1
     WHERE r.active = TRUE
       AND t.sort_order <= current_tier.sort_order
-      AND r.miles_cost <= $3
+      AND r.miles_cost <= $2
     ORDER BY r.sort_order`,
-    [accountId, account.currentTierId, account.availableMiles]
+    [account.currentTierId, account.availableMiles ?? 0]
   );
   return rows;
 }
