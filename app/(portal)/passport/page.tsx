@@ -119,7 +119,7 @@ export default function PassportDashboard() {
           href="/shop"
           className="px-8 py-3 bg-gold text-stone-900 rounded-full font-medium hover:bg-gold/90 transition-colors"
         >
-          Start Exploring
+          Start Shopping
         </Link>
       </div>
     );

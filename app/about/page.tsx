@@ -70,7 +70,7 @@ export default function AboutPage() {
                 LOCRA was born from a simple observation: the most profound souvenirs are the ones that carry the silence and the light of the places we leave behind. 
               </p>
               <p className="text-stone-500 font-light leading-relaxed">
-                Founded in 2026, we began as a small archive of objects collected during a single expedition through the Cyclades. Since then, our mission has expanded into a global Digital Atlas—a portal connecting people back to the pulse of the world.
+                Founded in 2026, we began as a small collection of pieces inspired by a single expedition through the Cyclades. Since then, our mission has expanded into a global Digital Atlas—a portal connecting people back to the pulse of the world.
               </p>
             </div>
             <div className="relative aspect-[4/5] bg-stone-50 rounded-sm overflow-hidden">

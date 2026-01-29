@@ -5,13 +5,13 @@ import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/lib/shopify/types";
 import { cn } from "@/lib/utils";
 
-interface ArtifactCardProps {
+interface PieceCardProps {
   product: Product;
   priority?: boolean;
   className?: string;
 }
 
-export function ArtifactCard({ product, priority = false, className }: ArtifactCardProps) {
+export function PieceCard({ product, priority = false, className }: PieceCardProps) {
   const price = product.priceRange.minVariantPrice;
   const hasEditionTag = product.tags.some((tag) =>
     tag.toLowerCase().includes("edition")
@@ -61,7 +61,7 @@ export function ArtifactCard({ product, priority = false, className }: ArtifactC
           {/* Quick View indicator on hover */}
           <div className="absolute bottom-5 left-0 right-0 z-20 flex justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
             <span className="px-4 py-2 bg-white/95 backdrop-blur-sm text-micro uppercase tracking-[0.2em] text-stone-700">
-              View Artifact
+              View Piece
             </span>
           </div>
         </div>
@@ -70,7 +70,7 @@ export function ArtifactCard({ product, priority = false, className }: ArtifactC
         <div className="space-y-3 text-center px-2">
           {/* Product Type */}
           <p className="text-micro uppercase tracking-[0.3em] text-stone-400 font-medium">
-            {product.productType || "Artifact"}
+            {product.productType || "Piece"}
           </p>
           
           {/* Product Name */}
@@ -95,7 +95,7 @@ export function ArtifactCard({ product, priority = false, className }: ArtifactC
 /**
  * Mini variant for featured section / sidebars
  */
-export function ArtifactCardMini({ product }: { product: Product }) {
+export function PieceCardMini({ product }: { product: Product }) {
   const price = product.priceRange.minVariantPrice;
 
   return (
@@ -115,7 +115,7 @@ export function ArtifactCardMini({ product }: { product: Product }) {
       </div>
       <div className="space-y-1 min-w-0">
         <p className="text-micro uppercase tracking-[0.15em] text-stone-400 font-medium truncate">
-          {product.productType || "Artifact"}
+          {product.productType || "Piece"}
         </p>
         <h4 className="text-sm font-serif text-stone-900 group-hover:text-gold transition-colors truncate">
           {product.title}
@@ -131,7 +131,7 @@ export function ArtifactCardMini({ product }: { product: Product }) {
 /**
  * Horizontal card for cart/checkout contexts
  */
-export function ArtifactCardHorizontal({ 
+export function PieceCardHorizontal({ 
   product,
   quantity,
   onRemove,
@@ -158,7 +158,7 @@ export function ArtifactCardHorizontal({
       <div className="flex-1 flex flex-col justify-between min-w-0">
         <div>
           <p className="text-micro uppercase tracking-[0.15em] text-stone-400 font-medium">
-            {product.productType || "Artifact"}
+            {product.productType || "Piece"}
           </p>
           <h4 className="font-serif text-stone-900 truncate">
             {product.title}

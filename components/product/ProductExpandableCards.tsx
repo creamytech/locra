@@ -230,7 +230,7 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                   >
                     <Badge variant="outline" className="border-gold/40 text-gold mb-4">
                       <MapPin className="w-3 h-3 mr-1.5" />
-                      {active.productType || "Artifact"}
+                      {active.productType || "Piece"}
                     </Badge>
                   </motion.div>
 
@@ -260,7 +260,7 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                     className="mb-6"
                   >
                     <p className="text-stone-600 leading-relaxed text-sm line-clamp-3">
-                      {active.description || "A carefully curated artifact from our global collection."}
+                      {active.description || "A carefully curated piece from our global collection."}
                     </p>
                     <Link 
                       href={`/products/${active.handle}`}
@@ -449,7 +449,7 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
             {/* Text Content */}
             <div className="space-y-2">
               <p className="text-[10px] tracking-[0.2em] uppercase text-gold font-medium">
-                {product.productType || "Artifact"}
+                {product.productType || "Piece"}
               </p>
               <motion.h3
                 layoutId={`title-${product.id}-${id}`}

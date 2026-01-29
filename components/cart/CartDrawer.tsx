@@ -63,7 +63,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                   Your suitcase is empty.
                 </p>
                 <p className="text-xs text-stone-400 max-w-[200px] leading-relaxed">
-                  Enter the Atlas and discover your first wearable artifact.
+                  Explore the collection and discover your first piece.
                 </p>
               </div>
               <Button asChild onClick={() => onOpenChange(false)} className="rounded-none bg-stone-900 text-white hover:bg-gold px-8">

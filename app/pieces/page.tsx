@@ -1,14 +1,14 @@
 import { getProducts, getCollectionByHandle } from "@/lib/shopify";
-import { ArtifactCard } from "@/components/product/ArtifactCard";
+import { PieceCard } from "@/components/product/ArtifactCard";
 import { Badge } from "@/components/ui/badge";
 import { DESTINATIONS } from "@/lib/data/atlas";
 import Link from "next/link";
-import { Archive, SlidersHorizontal, MapPin, ArrowRight, BookOpen, Clock } from "lucide-react";
+import { Layers, SlidersHorizontal, MapPin, ArrowRight, BookOpen, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
-  title: "The Archive — LOCRA",
+  title: "The Collection — LOCRA",
   description: "Explore the complete collection of wearable artifacts from our global expeditions.",
 };
 
@@ -41,12 +41,12 @@ export default async function ArtifactsPage({
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
             <div className="max-w-2xl">
               <div className="flex items-center gap-3 mb-6">
-                <Archive className="w-5 h-5 text-gold" />
+                <Layers className="w-5 h-5 text-gold" />
                 <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-stone-400">Archival Index</span>
               </div>
-              <h1 className="font-serif text-5xl md:text-7xl mb-8 italic">The Archive</h1>
+              <h1 className="font-serif text-5xl md:text-7xl mb-8 italic">The Collection</h1>
               <p className="text-stone-500 font-light leading-relaxed text-lg">
-                Explore our curated database of wearable objects. Each specimen in the archive is tied to a specific atmospheric coordinate in the Locra Atlas.
+                Explore our curated collection of destination-inspired apparel. Each piece is tied to a specific location in the Locra Atlas.
               </p>
             </div>
             
@@ -122,7 +122,7 @@ export default async function ArtifactsPage({
           {products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12 lg:gap-16">
               {products.map((product) => (
-                <ArtifactCard key={product.id} product={product} />
+                <PieceCard key={product.id} product={product} />
               ))}
             </div>
           ) : (

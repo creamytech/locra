@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ArtifactCard } from "@/components/product/ArtifactCard";
+import { PieceCard } from "@/components/product/ArtifactCard";
 import { getCollectionByHandle, getFeaturedProducts } from "@/lib/shopify";
 import { DESTINATIONS } from "@/lib/data/atlas";
 import { ArrowRight, Globe, Camera, BookOpen } from "lucide-react";
@@ -100,7 +100,7 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
         </div>
       </section>
 
-      {/* 3. CAPSULE COLLECTION (THE ARCHIVE) */}
+      {/* 3. CAPSULE COLLECTION (THE PIECES) */}
       <section className="section-spacing">
         <div className="container-wide">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
@@ -118,7 +118,7 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
           {collection && collection.products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
               {collection.products.map((product) => (
-                <ArtifactCard key={product.id} product={product} />
+                <PieceCard key={product.id} product={product} />
               ))}
             </div>
           ) : (
@@ -206,7 +206,7 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
             </Badge>
             <h2 className="font-serif text-4xl md:text-5xl mb-6">Join the {name} Waitlist</h2>
             <p className="text-stone-400 max-w-lg mb-12 font-light leading-relaxed italic">
-              Members of the Travel Club receive first notification when limited edition artifacts are released from our archives. 
+              Members of the Travel Club receive first notification when limited edition pieces are released from our collections. 
               Secure your place for the next {name} expedition.
             </p>
             <div className="flex w-full max-w-md gap-2">

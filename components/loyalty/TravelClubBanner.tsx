@@ -92,7 +92,7 @@ export function TravelClubBanner({ variant = 'inline', className }: TravelClubBa
               transition={{ delay: 0.2 }}
               className="text-body-lg text-stone-400 max-w-2xl mx-auto mb-14 leading-relaxed"
             >
-              Earn miles with every artifact. Collect passport stamps from destinations around the world. 
+              Earn miles with every purchase. Collect passport stamps from destinations around the world. 
               Unlock exclusive rewards and experiences reserved for travelers.
             </motion.p>
 

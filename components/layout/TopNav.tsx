@@ -41,7 +41,7 @@ const menuContent = {
     title: 'The Journal',
     description: 'Stories from destinations around the world',
     links: [
-      { name: 'All Stories', href: '/journal', icon: BookOpen, description: 'Browse the archive' },
+      { name: 'All Stories', href: '/journal', icon: BookOpen, description: 'Browse all stories' },
       { name: 'Destination Guides', href: '/journal?category=guides', icon: Map, description: 'Travel inspiration' },
       { name: 'Behind the Scenes', href: '/journal?category=behind-the-scenes', icon: Compass, description: 'How we source' },
     ],
@@ -114,7 +114,8 @@ export function TopNav({ featuredProducts }: TopNavProps) {
   };
 
   const navItems = [
-    { name: "Destinations", id: 'destinations' as MenuType },
+    { name: "Shop", id: null as MenuType, href: "/shop" },
+    { name: "Collections", id: 'destinations' as MenuType },
     { name: "Travel Club", id: 'travel-club' as MenuType, href: "/travel-club" },
     { name: "Journal", id: 'journal' as MenuType, href: "/journal" },
   ];
@@ -149,25 +150,38 @@ export function TopNav({ featuredProducts }: TopNavProps) {
 
           {/* Desktop Primary Nav */}
           <div className="hidden lg:flex items-center gap-8">
-            {navItems.map((item) => (
-              <button
-                key={item.name}
-                onMouseEnter={() => handleNavEnter(item.id)}
-                onMouseLeave={handleNavLeave}
-                onClick={() => setActiveMenu(activeMenu === item.id ? null : item.id)}
-                className={cn(
-                  "group flex items-center gap-1.5 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 rounded py-2",
-                  activeMenu === item.id ? "text-gold" : "",
-                  isLightMode ? "text-white/90 hover:text-white" : "text-stone-500 hover:text-stone-900"
-                )}
-              >
-                {item.name}
-                <ChevronDown className={cn(
-                  "w-3 h-3 transition-transform duration-200",
-                  activeMenu === item.id ? "rotate-180" : ""
-                )} />
-              </button>
-            ))}
+            {navItems.map((item) => 
+              item.id ? (
+                <button
+                  key={item.name}
+                  onMouseEnter={() => handleNavEnter(item.id)}
+                  onMouseLeave={handleNavLeave}
+                  onClick={() => setActiveMenu(activeMenu === item.id ? null : item.id)}
+                  className={cn(
+                    "group flex items-center gap-1.5 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 rounded py-2",
+                    activeMenu === item.id ? "text-gold" : "",
+                    isLightMode ? "text-white/90 hover:text-white" : "text-stone-500 hover:text-stone-900"
+                  )}
+                >
+                  {item.name}
+                  <ChevronDown className={cn(
+                    "w-3 h-3 transition-transform duration-200",
+                    activeMenu === item.id ? "rotate-180" : ""
+                  )} />
+                </button>
+              ) : (
+                <Link
+                  key={item.name}
+                  href={item.href || "/"}
+                  className={cn(
+                    "text-[10px] font-medium tracking-[0.2em] uppercase transition-colors",
+                    isLightMode ? "text-white/90 hover:text-white" : "text-stone-500 hover:text-stone-900"
+                  )}
+                >
+                  {item.name}
+                </Link>
+              )
+            )}
           </div>
         </div>
 
@@ -324,18 +338,18 @@ export function TopNav({ featuredProducts }: TopNavProps) {
                   Home
                 </Link>
                 <Link
-                  href="/atlas"
-                  className="block text-xl font-serif text-stone-900 hover:text-gold transition-colors"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  The Atlas
-                </Link>
-                <Link
                   href="/shop"
                   className="block text-xl font-serif text-stone-900 hover:text-gold transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Shop All
+                </Link>
+                <Link
+                  href="/atlas"
+                  className="block text-xl font-serif text-stone-900 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Browse Collections
                 </Link>
               </div>
               
@@ -391,7 +405,7 @@ export function TopNav({ featuredProducts }: TopNavProps) {
                   <Map className="w-5 h-5 text-gold" /> Your Passport
                 </Link>
                 <Link 
-                  href="/rewards" 
+                  href="/passport" 
                   className="flex items-center gap-3 text-lg font-serif text-stone-700 hover:text-gold transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

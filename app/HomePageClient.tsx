@@ -21,7 +21,7 @@ interface HomePageClientProps {
 }
 
 export function HomePageClient({ featuredProducts }: HomePageClientProps) {
-  const heroWords = ["Atlas", "Journey", "Archive", "Horizon"];
+  const heroWords = ["Collection", "Wardrobe", "Style", "Capsule"];
   const pathname = usePathname();
   
   // Track if component has mounted to ensure animations run
@@ -59,7 +59,7 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
           >
             <span className="w-12 h-px bg-gradient-to-r from-transparent to-gold/60" />
             <p className="text-micro font-medium tracking-[0.4em] text-gold/80 uppercase">
-              The Pursuit of Horizon
+              Destination-Inspired Apparel
             </p>
             <span className="w-12 h-px bg-gradient-to-l from-transparent to-gold/60" />
           </div>
@@ -68,7 +68,7 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
           <h1 
             className="text-display-lg md:text-display-xl font-serif font-light text-white mb-8 opacity-0 animate-[slide-up_0.8s_ease-out_0.4s_forwards]"
           >
-            Entering the <br className="hidden sm:block" />
+            Wear Your Next <br className="hidden sm:block" />
             <span className="inline-block opacity-0 animate-[fade-in_0.6s_ease-out_0.9s_forwards]">
               <FlipWords 
                 words={heroWords} 
@@ -82,8 +82,8 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
           <p 
             className="text-body-lg md:text-headline text-white/75 max-w-2xl mx-auto mb-14 font-serif italic leading-relaxed opacity-0 animate-[fade-in_0.8s_ease-out_0.7s_forwards]"
           >
-            Curated artifacts inspired by the world&apos;s most iconic destinations. 
-            Enter through our gateway portals.
+            Premium apparel inspired by the world&apos;s most iconic destinations. 
+            Each piece tells a story you can wear.
           </p>
 
           {/* CTA Buttons */}
@@ -95,7 +95,7 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
               size="xl" 
               className="min-w-[200px] h-14 rounded-none bg-champagne text-stone-900 hover:bg-gold hover:text-white transition-all duration-500 font-medium tracking-wide"
             >
-              <Link href="#atlas">Discover the Atlas</Link>
+              <Link href="/shop">Shop the Collection</Link>
             </Button>
             <Button 
               asChild 
@@ -103,7 +103,7 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
               size="xl" 
               className="min-w-[200px] h-14 rounded-none border-white/30 text-white/90 backdrop-blur-sm hover:bg-white/10 hover:border-white/50 transition-all duration-500"
             >
-              <Link href="/artifacts">The Archive</Link>
+              <Link href="#destinations">Explore Destinations</Link>
             </Button>
           </div>
 
@@ -132,18 +132,18 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
       {/* ================================================
           2. THE ATLAS GATEWAY GRID - WOBBLE CARDS
           ================================================ */}
-      <section id="atlas" className="section-spacing bg-background">
+      <section id="destinations" className="section-spacing bg-background">
         <div className="container-wide">
           {/* Section Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
             <div className="max-w-2xl">
-              <p className="label-gold mb-4">Gateway Index 01—04</p>
+              <p className="label-gold mb-4">Shop by Destination</p>
               <h2 className="font-serif text-display mb-6 leading-tight">
-                Select Your <br />
-                <span className="italic">Destination</span>
+                Browse <br />
+                <span className="italic">Collections</span>
               </h2>
               <p className="text-editorial max-w-lg">
-                Each destination is a world unto itself. Explore artifacts woven from the spirit, heritage, and atmosphere of these specific regions.
+                Each collection is inspired by a unique destination. Discover apparel that captures the spirit and atmosphere of these iconic places.
               </p>
             </div>
             <Link 
@@ -212,7 +212,7 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
           <div className="text-center mb-24">
             <p className="label-editorial mb-4">Latest Additions</p>
             <h2 className="font-serif text-display mb-8">
-              From the Archive
+              Featured Pieces
             </h2>
             <div className="flex items-center justify-center gap-4">
               <span className="w-16 h-px bg-stone-200" />
@@ -232,7 +232,7 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
               size="xl" 
               className="min-w-[280px] h-14 rounded-none border-stone-300 text-stone-700 hover:border-gold hover:text-gold hover:bg-gold/5 transition-all duration-500"
             >
-              <Link href="/artifacts">Explore the Full Archive</Link>
+              <Link href="/pieces">Explore the Full Collection</Link>
             </Button>
           </div>
         </div>

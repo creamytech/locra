@@ -92,7 +92,7 @@ export function Footer() {
             </Link>
             
             <p className="text-stone-500 leading-relaxed max-w-xs">
-              Curating wearable artifacts inspired by the world's most iconic destinations. 
+              Curating wearable pieces inspired by the world's most iconic destinations. 
               Every piece tells a story.
             </p>
 
@@ -157,23 +157,23 @@ export function Footer() {
                 </h4>
                 <ul className="space-y-3">
                   <li>
-                    <Link href="/artifacts" className="text-sm text-stone-600 hover:text-gold transition-colors">
-                      All Artifacts
+                    <Link href="/shop" className="text-sm text-stone-600 hover:text-gold transition-colors">
+                      All Products
                     </Link>
                   </li>
                   <li>
-                    <Link href="/artifacts?type=t-shirt" className="text-sm text-stone-600 hover:text-gold transition-colors">
+                    <Link href="/pieces?type=t-shirt" className="text-sm text-stone-600 hover:text-gold transition-colors">
                       T-Shirts
                     </Link>
                   </li>
                   <li>
-                    <Link href="/artifacts?new=true" className="text-sm text-stone-600 hover:text-gold transition-colors">
-                      New Arrivals
+                    <Link href="/pieces" className="text-sm text-stone-600 hover:text-gold transition-colors">
+                      All Pieces
                     </Link>
                   </li>
                   <li>
-                    <Link href="/gift-cards" className="text-sm text-stone-600 hover:text-gold transition-colors">
-                      Gift Cards
+                    <Link href="/atlas" className="text-sm text-stone-600 hover:text-gold transition-colors">
+                      Browse Collections
                     </Link>
                   </li>
                 </ul>
@@ -192,7 +192,7 @@ export function Footer() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/travel-club#benefits" className="text-sm text-stone-600 hover:text-gold transition-colors">
+                    <Link href="/travel-club#how-it-works" className="text-sm text-stone-600 hover:text-gold transition-colors">
                       Member Benefits
                     </Link>
                   </li>
@@ -202,8 +202,8 @@ export function Footer() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/referrals" className="text-sm text-stone-600 hover:text-gold transition-colors">
-                      Refer Friends
+                    <Link href="/passport" className="text-sm text-stone-600 hover:text-gold transition-colors">
+                      Earn & Refer
                     </Link>
                   </li>
                 </ul>
@@ -254,7 +254,7 @@ export function Footer() {
 
             {/* Tagline */}
             <p className="hidden md:block text-xs text-stone-400 italic">
-              Artifacts of Destination
+              Pieces of Destination
             </p>
 
             {/* Legal Links */}

@@ -16,8 +16,8 @@ const REGION_GROUPS = {
   "Nordic & Highland": ["Highlands", "Nordics"],
 };
 
-// Fallback static artifacts for each destination (used when no Shopify product)
-const FALLBACK_ARTIFACTS: Record<string, {
+// Fallback static pieces for each destination (used when no Shopify product)
+const FALLBACK_PIECES: Record<string, {
   name: string;
   subtitle: string;
   price: string;
@@ -194,7 +194,7 @@ export function MegaMenu({ isOpen, onClose, onMouseEnter, onMouseLeave, featured
                     </div>
                   </div>
 
-                  {/* Column 3: Destination Spirit + Featured Artifact */}
+                  {/* Column 3: Destination Spirit + Featured Piece */}
                   <div className="col-span-5 pl-8 border-l border-stone-100">
                     <AnimatePresence mode="wait">
                       <motion.div
@@ -252,16 +252,16 @@ export function MegaMenu({ isOpen, onClose, onMouseEnter, onMouseLeave, featured
                           </p>
                         </div>
                         
-                        {/* Featured Artifact Preview */}
+                        {/* Featured Piece Preview */}
                         {(() => {
                           const destHandle = hoveredDestination.handle;
                           const shopifyProduct = featuredProducts?.[destHandle];
-                          const fallback = FALLBACK_ARTIFACTS[destHandle];
+                          const fallback = FALLBACK_PIECES[destHandle];
                           
                           // Use Shopify product if available, otherwise fallback
-                          const artifact = shopifyProduct ? {
+                          const piece = shopifyProduct ? {
                             name: shopifyProduct.title,
-                            subtitle: shopifyProduct.productType || "Artifact",
+                            subtitle: shopifyProduct.productType || "Piece",
                             price: formatPrice(
                               shopifyProduct.priceRange.minVariantPrice.amount,
                               shopifyProduct.priceRange.minVariantPrice.currencyCode
@@ -270,7 +270,7 @@ export function MegaMenu({ isOpen, onClose, onMouseEnter, onMouseLeave, featured
                             handle: shopifyProduct.handle,
                           } : fallback;
                           
-                          if (!artifact) return null;
+                          if (!piece) return null;
                           
                           return (
                             <div className="pt-4 border-t border-stone-100">
@@ -278,30 +278,30 @@ export function MegaMenu({ isOpen, onClose, onMouseEnter, onMouseLeave, featured
                                 Featured from {hoveredDestination.name}
                               </p>
                               <Link
-                                href={`/products/${artifact.handle}`}
+                                href={`/products/${piece.handle}`}
                                 onClick={onClose}
                                 className="group flex items-center gap-4 p-3 -mx-3 rounded-lg hover:bg-stone-50 transition-colors"
                               >
-                                {/* Artifact Image */}
+                                {/* Piece Image */}
                                 <div className="w-16 h-20 relative overflow-hidden flex-shrink-0 rounded-sm bg-stone-100">
                                   <Image
-                                    src={artifact.imageUrl}
-                                    alt={artifact.name}
+                                    src={piece.imageUrl}
+                                    alt={piece.name}
                                     fill
                                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                                   />
                                 </div>
                                 
-                                {/* Artifact Info */}
+                                {/* Piece Info */}
                                 <div className="flex-1 min-w-0">
                                   <h5 className="text-sm font-serif text-stone-900 group-hover:text-gold transition-colors">
-                                    {artifact.name}
+                                    {piece.name}
                                   </h5>
                                   <p className="text-[10px] text-stone-500 mt-0.5">
-                                    {artifact.subtitle}
+                                    {piece.subtitle}
                                   </p>
                                   <p className="text-xs font-medium text-stone-700 mt-1">
-                                    {artifact.price}
+                                    {piece.price}
                                   </p>
                                 </div>
                                 

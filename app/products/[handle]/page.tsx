@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/accordion";
 import { PortalArchFrame } from "@/components/portal/PortalArch";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
-import { ArtifactCard } from "@/components/product/ArtifactCard";
+import { PieceCard } from "@/components/product/ArtifactCard";
 import { ProductMilesBanner } from "@/components/loyalty";
 import { getProductByHandle, getCollectionByHandle } from "@/lib/shopify";
 import { formatPrice, cleanCopy } from "@/lib/utils";
@@ -60,7 +60,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       {/* 1. ARCHIVAL HEADER (BREADCRUMB) */}
       <div className="container-wide py-6 border-b border-stone-100 flex justify-between items-center">
         <nav className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] font-medium text-stone-400">
-          <Link href="/artifacts" className="hover:text-stone-900 transition-colors">The Archive</Link>
+          <Link href="/pieces" className="hover:text-stone-900 transition-colors">The Collection</Link>
           <span className="text-stone-200">/</span>
           {destination && (
             <>
@@ -216,7 +216,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 max-w-5xl mx-auto">
               {relatedProducts.map(p => (
-                <ArtifactCard key={p.id} product={p} />
+                <PieceCard key={p.id} product={p} />
               ))}
             </div>
           </div>
