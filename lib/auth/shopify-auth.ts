@@ -420,7 +420,8 @@ export async function fetchCustomer(accessToken: string) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
+        // Customer Account API uses just the token, not "Bearer token"
+        Authorization: accessToken,
       },
       body: JSON.stringify({ query }),
     });
