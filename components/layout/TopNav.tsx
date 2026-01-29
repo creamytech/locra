@@ -10,8 +10,13 @@ import { LogoWordmark } from "@/components/brand/Logo";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
+import type { Product } from "@/lib/shopify/types";
 
-export function TopNav() {
+interface TopNavProps {
+  featuredProducts?: Record<string, Product | null>;
+}
+
+export function TopNav({ featuredProducts }: TopNavProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,11 +45,12 @@ export function TopNav() {
   return (
     <header 
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-500 bg-white",
+        "sticky top-0 z-50 w-full transition-all duration-500",
         isScrolled || isMegaMenuOpen
-          ? "border-b border-stone-200"
-          : "border-transparent"
+          ? "border-b border-stone-200 bg-white"
+          : "bg-transparent border-transparent"
       )}
+      onMouseLeave={() => setIsMegaMenuOpen(false)}
     >
       <nav
         className="container-wide flex h-20 items-center justify-between"
@@ -58,7 +64,7 @@ export function TopNav() {
             aria-label="LOCRA Home"
           >
             <LogoWordmark 
-              color="dark" 
+              color={!isScrolled && !isMegaMenuOpen && pathname === "/" ? "light" : "dark"} 
               className="h-5 w-auto"
             />
           </Link>
@@ -70,7 +76,8 @@ export function TopNav() {
               onMouseEnter={() => setIsMegaMenuOpen(true)}
               className={cn(
                 "group flex items-center gap-1.5 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 rounded",
-                isMegaMenuOpen ? "text-gold" : "text-stone-500 hover:text-stone-900"
+                isMegaMenuOpen ? "text-gold" : "text-stone-500 hover:text-stone-900",
+                !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white/90 hover:text-white" : ""
               )}
             >
               Destinations
@@ -82,7 +89,8 @@ export function TopNav() {
                 href={link.href}
                 className={cn(
                   "text-[10px] font-medium tracking-[0.2em] uppercase transition-colors",
-                  pathname === link.href ? "text-gold" : "text-stone-500 hover:text-stone-900"
+                  pathname === link.href ? "text-gold" : "text-stone-500 hover:text-stone-900",
+                  !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white/90 hover:text-white" : ""
                 )}
               >
                 {link.name}
@@ -95,12 +103,17 @@ export function TopNav() {
         <div className="flex items-center gap-4">
           <Link 
             href="/about" 
-            className="hidden md:block text-[10px] font-medium tracking-[0.2em] uppercase transition-colors text-stone-500 hover:text-stone-900"
+            className={cn(
+              "hidden md:block text-[10px] font-medium tracking-[0.2em] uppercase transition-colors",
+              !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white/90 hover:text-white" : "text-stone-500 hover:text-stone-900"
+            )}
           >
             About
           </Link>
           
-          <SuitcaseButton variant="dark" />
+          <SuitcaseButton 
+            variant={!isScrolled && !isMegaMenuOpen && pathname === "/" ? "white" : "dark"} 
+          />
 
           <Button
             variant="ghost"
@@ -118,7 +131,8 @@ export function TopNav() {
       {/* Mega Menu Overlay */}
       <MegaMenu 
         isOpen={isMegaMenuOpen} 
-        onClose={() => setIsMegaMenuOpen(false)} 
+        onClose={() => setIsMegaMenuOpen(false)}
+        featuredProducts={featuredProducts}
       />
 
       {/* Mobile Menu Dropdown */}

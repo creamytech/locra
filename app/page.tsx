@@ -15,14 +15,15 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* 1. CINEMATIC PORTAL HERO */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* 1. CINEMATIC PORTAL HERO - negative margin pulls it under transparent nav */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-20">
         <div className="absolute inset-0">
           <HeroVideo 
             src="https://5kynenqtmmcueqop.public.blob.vercel-storage.com/LocraHero.mp4" 
             className="w-full h-full"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-stone-900/40 via-stone-900/20 to-stone-900/60" />
+          {/* Gradient overlay - stronger at top for nav readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-stone-900/60 via-stone-900/30 to-stone-900/70" />
         </div>
 
         <div className="container-narrow relative z-10 text-center py-20">
@@ -32,14 +33,14 @@ export default async function HomePage() {
             <span className="w-8 h-px bg-white/40" />
           </p>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light tracking-tight mb-8 text-balance animate-slide-up text-white drop-shadow-2xl">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-light tracking-tight mb-8 text-balance animate-slide-up text-white drop-shadow-2xl [text-wrap:balance]">
             Entering the <br /> 
             <span className="italic">Atlas</span>
           </h1>
 
           <p className="text-lg md:text-2xl text-white/90 max-w-2xl mx-auto mb-12 animate-fade-in font-serif italic drop-shadow-md leading-relaxed">
             Curated artifacts inspired by the world&apos;s most iconic destinations. 
-            Begin your journey through our gateway portals.
+            Enter through our gateway portals.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-in">
@@ -75,7 +76,7 @@ export default async function HomePage() {
               </p>
             </div>
             <Link href="/atlas" className="group flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-stone-400 hover:text-gold transition-colors">
-              View Full Atlas <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
+              View Full Atlas <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" aria-hidden="true" />
             </Link>
           </div>
 
@@ -125,7 +126,7 @@ export default async function HomePage() {
       <section className="section-spacing bg-white">
         <div className="container-wide">
           <div className="text-center mb-20">
-            <h2 className="font-serif text-4xl md:text-5xl mb-6">Latest from the Archive</h2>
+            <h2 className="font-serif text-4xl md:text-5xl mb-6 [text-wrap:balance]">Latest from the Archive</h2>
             <div className="w-16 h-px bg-gold mx-auto" />
           </div>
 
@@ -152,8 +153,8 @@ export default async function HomePage() {
         </div>
 
         <div className="container-narrow relative z-10 text-center">
-          <Compass className="w-12 h-12 text-gold mx-auto mb-8 animate-pulse" />
-          <h2 className="font-serif text-4xl md:text-5xl mb-8 leading-tight">An Expanding <br /> Point of View</h2>
+          <Compass className="w-12 h-12 text-gold mx-auto mb-8 animate-pulse" aria-hidden="true" />
+          <h2 className="font-serif text-4xl md:text-5xl mb-8 leading-tight [text-wrap:balance]">An Expanding <br /> Point of View</h2>
           <p className="text-stone-400 max-w-xl mx-auto mb-12 font-light leading-relaxed">
             Locra is growing. From the ivory streets of Santorini to the lush paths of Kyoto, our Atlas is an ever-evolving map of inspiration. New destinations are currently being scouted for our next archival drop.
           </p>
@@ -197,7 +198,7 @@ export default async function HomePage() {
               </p>
               <Button asChild variant="link" className="p-0 h-auto text-gold uppercase tracking-[0.2em] text-xs font-bold hover:gap-4 transition-all">
                 <Link href="/journal" className="inline-flex items-center gap-2">
-                  Read the Journal <ArrowRight className="w-4 h-4" />
+                  Read the Journal <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </Link>
               </Button>
             </div>

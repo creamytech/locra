@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import { TopNav } from "@/components/layout/TopNav";
+import { TopNavWrapper } from "@/components/layout/TopNavWrapper";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 
@@ -86,7 +86,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen flex flex-col">
         <CartProvider>
-          <TopNav />
+          <TopNavWrapper />
           <main className="flex-1">{children}</main>
           <Footer />
         </CartProvider>
