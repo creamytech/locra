@@ -297,15 +297,27 @@ export async function clearOAuthParams() {
  */
 export async function getAccessToken(): Promise<string | null> {
   const cookieStore = await cookies();
+  
+  // Debug: log all cookie names we can see
+  const allCookies = cookieStore.getAll();
+  console.log('getAccessToken: All cookies found:', allCookies.map(c => c.name));
+  console.log('getAccessToken: Looking for cookie named:', ACCESS_TOKEN_COOKIE);
+  
   const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE)?.value;
+  console.log('getAccessToken: Access token found:', !!accessToken);
   
   if (accessToken) {
+    console.log('getAccessToken: Token prefix:', accessToken.substring(0, 15) + '...');
     return accessToken;
   }
 
   // Try to refresh using refresh token
+  console.log('getAccessToken: No access token, trying refresh...');
   const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE)?.value;
+  console.log('getAccessToken: Refresh token found:', !!refreshToken);
+  
   if (!refreshToken) {
+    console.log('getAccessToken: No refresh token either, returning null');
     return null;
   }
 
