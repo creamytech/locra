@@ -166,7 +166,7 @@ export async function createAccount(
       referral_code as "referralCode", referred_by_account_id as "referredByAccountId",
       referral_eligible as "referralEligible",
       created_at as "createdAt", updated_at as "updatedAt", last_activity_at as "lastActivityAt"`,
-    [shopifyCustomerId, email, referredByAccountId]
+    [shopifyCustomerId, email, referredByAccountId ?? null]
   );
   return rows[0];
 }
