@@ -106,19 +106,19 @@ export default async function DestinationPage({ params }: DestinationPageProps) 
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
             <div>
               <p className="text-[10px] tracking-[0.2em] font-medium text-stone-400 uppercase mb-4">
-                Available Artifacts
+                Available Pieces
               </p>
               <h3 className="font-serif text-4xl md:text-5xl">The {name} Capsule</h3>
             </div>
             <div className="text-sm text-stone-400 font-serif italic">
-              Showing {collection?.products.length || 0} curated specimens
+              Showing {collection?.products.length || 0} curated pieces
             </div>
           </div>
 
           {collection && collection.products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 lg:gap-12">
               {collection.products.map((product) => (
-                <PieceCard key={product.id} product={product} />
+                <PieceCard key={product.id} product={product} destination={name} />
               ))}
             </div>
           ) : (

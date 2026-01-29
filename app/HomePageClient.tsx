@@ -8,12 +8,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { FlipWords } from "@/components/ui/flip-words";
-import { WobbleCard } from "@/components/ui/wobble-card";
 import { HeroVideo } from "@/components/portal/HeroVideo";
 import { TravelClubBanner } from "@/components/loyalty";
 import { ProductExpandableCards } from "@/components/product/ProductExpandableCards";
+import { DestinationCard } from "@/components/destination/DestinationCard";
 import { DESTINATIONS } from "@/lib/data/atlas";
-import { ArrowRight, Star, MapPin } from "lucide-react";
+import { ArrowRight, Star, Heart, MapPin } from "lucide-react";
 import type { Product } from "@/lib/shopify/types";
 
 interface HomePageClientProps {
@@ -155,49 +155,18 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
             </Link>
           </div>
 
-          {/* Destinations Grid with Wobble Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {DESTINATIONS.map((dest, idx) => (
-              <Link key={dest.handle} href={`/destinations/${dest.handle}`}>
-                <WobbleCard
-                  containerClassName="h-[400px] bg-stone-800"
-                  className="relative"
-                >
-                  {/* Background Image */}
-                  <Image
-                    src={dest.thumbnailUrl}
-                    alt={dest.name}
-                    fill
-                    className="object-cover"
-                  />
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-stone-900/20 to-transparent" />
-                  
-                  {/* Content */}
-                  <div className="absolute inset-0 p-6 flex flex-col justify-between">
-                    {/* Top: Coordinates */}
-                    <div className="flex justify-between items-start">
-                      <span className="text-micro font-mono text-white/70 tracking-tight">
-                        {dest.coordinates}
-                      </span>
-                      <MapPin className="w-4 h-4 text-gold/60" />
-                    </div>
-                    
-                    {/* Bottom: Info */}
-                    <div>
-                      <span className="font-serif text-4xl text-white/20 block mb-2">
-                        {String(idx + 1).padStart(2, '0')}
-                      </span>
-                      <p className="text-[10px] tracking-[0.3em] uppercase text-gold mb-2">
-                        {dest.region}
-                      </p>
-                      <h3 className="font-serif text-2xl text-white">
-                        {dest.name}
-                      </h3>
-                    </div>
-                  </div>
-                </WobbleCard>
-              </Link>
+          {/* Destinations Grid with Portal Arch Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {DESTINATIONS.map((dest) => (
+              <DestinationCard
+                key={dest.handle}
+                handle={dest.handle}
+                name={dest.name}
+                region={dest.region}
+                coordinates={dest.coordinates.split(',')[0]}
+                imageUrl={dest.thumbnailUrl}
+                tagline={dest.tagline}
+              />
             ))}
           </div>
         </div>
