@@ -20,8 +20,8 @@ const SHOP_ID = SHOPIFY_CUSTOMER_ACCOUNT_API_URL?.split('/').pop() || '';
 const AUTHORIZATION_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/oauth/authorize`;
 const TOKEN_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/oauth/token`;
 const LOGOUT_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/logout`;
-// Customer API endpoint uses the original URL format
-const CUSTOMER_API_ENDPOINT = `${SHOPIFY_CUSTOMER_ACCOUNT_API_URL}/account/customer/api/2024-01/graphql`;
+// Customer API GraphQL endpoint - format: https://shopify.com/{shop_id}/account/customer/api/graphql.json
+const CUSTOMER_API_ENDPOINT = `https://shopify.com/${SHOP_ID}/account/customer/api/graphql.json`;
 
 // Cookie names
 const ACCESS_TOKEN_COOKIE = 'shopify_customer_access_token';
@@ -385,6 +385,8 @@ export async function fetchCustomer(accessToken: string) {
   `;
 
   try {
+    console.log('fetchCustomer: Calling endpoint:', CUSTOMER_API_ENDPOINT);
+    
     const response = await fetch(CUSTOMER_API_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -394,12 +396,22 @@ export async function fetchCustomer(accessToken: string) {
       body: JSON.stringify({ query }),
     });
 
+    console.log('fetchCustomer: Response status:', response.status);
+
     if (!response.ok) {
-      console.error('Customer fetch failed:', await response.text());
+      const errorText = await response.text();
+      console.error('Customer fetch failed:', response.status, errorText);
       return null;
     }
 
     const data = await response.json();
+    console.log('fetchCustomer: Response data:', JSON.stringify(data, null, 2));
+    
+    if (data.errors) {
+      console.error('fetchCustomer: GraphQL errors:', data.errors);
+      return null;
+    }
+    
     return data.data?.customer;
   } catch (error) {
     console.error('Customer fetch error:', error);

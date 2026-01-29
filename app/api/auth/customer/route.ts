@@ -12,28 +12,34 @@ export async function GET() {
     const accessToken = await getAccessToken();
     
     if (!accessToken) {
+      console.log('Customer API: No access token found');
       return NextResponse.json(
         { error: 'Not authenticated' },
         { status: 401 }
       );
     }
 
+    console.log('Customer API: Fetching customer with token...');
+
     // Fetch customer data
     const customer = await fetchCustomer(accessToken);
     
     if (!customer) {
+      console.error('Customer API: fetchCustomer returned null');
       return NextResponse.json(
         { error: 'Failed to fetch customer data' },
         { status: 500 }
       );
     }
 
+    console.log('Customer API: Successfully fetched customer:', customer.id);
     return NextResponse.json({ customer });
   } catch (error) {
     console.error('Customer data error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
 }
+
