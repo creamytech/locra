@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -21,12 +22,16 @@ interface HomePageClientProps {
 
 export function HomePageClient({ featuredProducts }: HomePageClientProps) {
   const heroWords = ["Atlas", "Journey", "Archive", "Horizon"];
+  const pathname = usePathname();
   
-  // Force CSS animations to replay when navigating back to homepage
-  const [animationKey, setAnimationKey] = useState(0);
+  // Track if component has mounted to ensure animations run
+  const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
-    setAnimationKey(Date.now());
+    setIsMounted(true);
   }, []);
+
+  // Use a unique ID per pathname visit to force animation replay
+  const animationKey = `home-${pathname}-${isMounted ? 'ready' : 'init'}`;
 
   return (
     <div className="flex flex-col" key={animationKey}>

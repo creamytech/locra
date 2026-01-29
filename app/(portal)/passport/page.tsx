@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLoyalty } from '@/hooks/useLoyalty';
+import { useAuth } from '@/components/auth';
 import {
   TierProgressBar,
   StampGrid,
@@ -13,16 +14,19 @@ import {
   MilesEarnedToast,
   TierUpgradeModal,
 } from '@/components/loyalty';
-import { Plane, Map, Gift, Compass, BookOpen, Users } from 'lucide-react';
+import { Plane, Map, Gift, Compass, BookOpen, Users, Loader2 } from 'lucide-react';
+import Link from 'next/link';
 
-interface PassportDashboardProps {
-  shopifyCustomerId?: string;
-}
-
-export default function PassportDashboard({ shopifyCustomerId }: PassportDashboardProps) {
+export default function PassportDashboard() {
+  // Get customer from auth context
+  const { customer, isAuthenticated, isLoading: authLoading, login } = useAuth();
+  
+  // Extract customer ID from the authenticated customer
+  const shopifyCustomerId = customer?.id;
+  
   const { status, loading, error, redeemReward, refetch } = useLoyalty({
     shopifyCustomerId,
-    autoFetch: true,
+    autoFetch: !!shopifyCustomerId, // Only fetch if we have a customer ID
   });
 
   const [activeTab, setActiveTab] = useState<'overview' | 'stamps' | 'quests'>('overview');
@@ -43,6 +47,42 @@ export default function PassportDashboard({ shopifyCustomerId }: PassportDashboa
     }
   }, [status?.recentTransactions]);
 
+  // Auth loading state
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center gap-4"
+        >
+          <Loader2 className="w-12 h-12 text-gold animate-spin" />
+          <p className="text-stone-500 font-serif italic">Checking your passport...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Not authenticated - show sign in prompt
+  if (!isAuthenticated || !customer) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-stone-50 px-6">
+        <Map className="w-16 h-16 text-stone-300 mb-4" />
+        <h2 className="text-2xl font-serif text-stone-800 mb-2">Join the Travel Club</h2>
+        <p className="text-stone-500 text-center max-w-md mb-6">
+          Sign in or create an account to start earning miles and collecting passport stamps from destinations around the world.
+        </p>
+        <button 
+          onClick={() => login('/passport')}
+          className="px-8 py-3 bg-stone-900 text-white rounded-full font-medium hover:bg-stone-800 transition-colors"
+        >
+          Sign In to Continue
+        </button>
+      </div>
+    );
+  }
+
+  // Loyalty data loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-stone-50">
@@ -58,17 +98,21 @@ export default function PassportDashboard({ shopifyCustomerId }: PassportDashboa
     );
   }
 
+  // No loyalty status yet (new customer)
   if (error || !status) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-stone-50 px-6">
-        <Map className="w-16 h-16 text-stone-300 mb-4" />
-        <h2 className="text-2xl font-serif text-stone-800 mb-2">Join the Travel Club</h2>
+        <Plane className="w-16 h-16 text-gold mb-4" />
+        <h2 className="text-2xl font-serif text-stone-800 mb-2">Welcome, {customer.firstName || 'Traveler'}!</h2>
         <p className="text-stone-500 text-center max-w-md mb-6">
-          Sign in or create an account to start earning miles and collecting passport stamps from destinations around the world.
+          Your passport is being prepared. Start shopping to earn your first miles and collect stamps from destinations around the world.
         </p>
-        <button className="px-8 py-3 bg-stone-900 text-white rounded-full font-medium hover:bg-stone-800 transition-colors">
-          Sign In to Continue
-        </button>
+        <Link 
+          href="/shop"
+          className="px-8 py-3 bg-gold text-stone-900 rounded-full font-medium hover:bg-gold/90 transition-colors"
+        >
+          Start Exploring
+        </Link>
       </div>
     );
   }

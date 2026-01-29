@@ -30,7 +30,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="flex flex-col w-full sm:max-w-md bg-[#F9F8F6] border-l border-stone-200 p-0 overflow-hidden">
+      <SheetContent hideDefaultClose className="flex flex-col w-full sm:max-w-md bg-[#F9F8F6] border-l border-stone-200 p-0 overflow-hidden">
         {/* Custom Header */}
         <div className="p-8 pb-4 flex items-center justify-between">
           <div className="space-y-1">
