@@ -42,7 +42,7 @@ export function TravelClubSignup() {
       </p>
 
       {status === "success" ? (
-        <div className="text-gold font-medium">
+        <div className="text-gold font-medium" aria-live="polite">
           Welcome to the Travel Club. Your journey begins soon.
         </div>
       ) : (
@@ -52,16 +52,19 @@ export function TravelClubSignup() {
         >
           <Input
             type="email"
-            placeholder="Enter your email"
+            name="email"
+            placeholder="Enter your email…"
             className="flex-1 border-stone-200 focus:ring-gold"
             aria-label="Email address"
+            autoComplete="email"
+            spellCheck={false}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={status === "loading"}
             required
           />
           <Button type="submit" disabled={status === "loading"}>
-            {status === "loading" ? "Joining..." : "Join Club"}
+            {status === "loading" ? "Joining…" : "Join Club"}
           </Button>
         </form>
       )}

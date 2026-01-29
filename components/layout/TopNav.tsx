@@ -6,6 +6,7 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MegaMenu } from "@/components/layout/MegaMenu";
 import { SuitcaseButton } from "@/components/cart/SuitcaseButton";
+import { LogoWordmark } from "@/components/brand/Logo";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
@@ -39,10 +40,10 @@ export function TopNav() {
   return (
     <header 
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-500",
+        "sticky top-0 z-50 w-full transition-all duration-500 bg-white",
         isScrolled || isMegaMenuOpen
-          ? "border-b border-stone-200 bg-white"
-          : "bg-transparent border-transparent"
+          ? "border-b border-stone-200"
+          : "border-transparent"
       )}
     >
       <nav
@@ -53,10 +54,13 @@ export function TopNav() {
         <div className="flex items-center gap-8">
           <Link
             href="/"
-            className="flex items-center gap-2 font-serif text-2xl tracking-[0.2em] text-foreground transition-opacity hover:opacity-70"
+            className="flex items-center transition-opacity hover:opacity-70"
             aria-label="LOCRA Home"
           >
-            LOCRA
+            <LogoWordmark 
+              color="dark" 
+              className="h-5 w-auto"
+            />
           </Link>
 
           {/* Desktop Primary Nav Highlights */}
@@ -65,9 +69,8 @@ export function TopNav() {
               onClick={() => setIsMegaMenuOpen(!isMegaMenuOpen)}
               onMouseEnter={() => setIsMegaMenuOpen(true)}
               className={cn(
-                "group flex items-center gap-1.5 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors outline-none",
-                isMegaMenuOpen ? "text-gold" : "text-stone-500 hover:text-stone-900",
-                !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white/80 hover:text-white" : ""
+                "group flex items-center gap-1.5 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 rounded",
+                isMegaMenuOpen ? "text-gold" : "text-stone-500 hover:text-stone-900"
               )}
             >
               Destinations
@@ -79,8 +82,7 @@ export function TopNav() {
                 href={link.href}
                 className={cn(
                   "text-[10px] font-medium tracking-[0.2em] uppercase transition-colors",
-                  pathname === link.href ? "text-gold" : "text-stone-500 hover:text-stone-900",
-                  !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white/80 hover:text-white" : ""
+                  pathname === link.href ? "text-gold" : "text-stone-500 hover:text-stone-900"
                 )}
               >
                 {link.name}
@@ -93,25 +95,22 @@ export function TopNav() {
         <div className="flex items-center gap-4">
           <Link 
             href="/about" 
-            className={cn(
-              "hidden md:block text-[10px] font-medium tracking-[0.2em] uppercase transition-colors",
-              !isScrolled && !isMegaMenuOpen && pathname === "/" ? "text-white/80 hover:text-white" : "text-stone-500 hover:text-stone-900"
-            )}
+            className="hidden md:block text-[10px] font-medium tracking-[0.2em] uppercase transition-colors text-stone-500 hover:text-stone-900"
           >
             About
           </Link>
           
-          <SuitcaseButton 
-            variant={!isScrolled && !isMegaMenuOpen && pathname === "/" ? "white" : "dark"} 
-          />
+          <SuitcaseButton variant="dark" />
 
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="lg:hidden"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <X /> : <Menu />}
+            {isMobileMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
           </Button>
         </div>
       </nav>
