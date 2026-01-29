@@ -119,6 +119,10 @@ export async function exchangeCodeForTokens(
   expiresIn: number;
 } | null> {
   try {
+    console.log('Token exchange: Starting exchange...');
+    console.log('Token exchange: Using endpoint:', TOKEN_ENDPOINT);
+    console.log('Token exchange: Redirect URI:', redirectUri);
+    
     const params = new URLSearchParams({
       grant_type: 'authorization_code',
       client_id: SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID,
@@ -135,12 +139,23 @@ export async function exchangeCodeForTokens(
       body: params.toString(),
     });
 
+    console.log('Token exchange: Response status:', response.status);
+
     if (!response.ok) {
-      console.error('Token exchange failed:', await response.text());
+      const errorText = await response.text();
+      console.error('Token exchange failed:', response.status, errorText);
       return null;
     }
 
     const data = await response.json();
+    
+    // Log token info (first 20 chars only for security)
+    console.log('Token exchange: Success!');
+    console.log('Token exchange: Access token prefix:', data.access_token?.substring(0, 20) + '...');
+    console.log('Token exchange: Refresh token prefix:', data.refresh_token?.substring(0, 20) + '...');
+    console.log('Token exchange: ID token present:', !!data.id_token);
+    console.log('Token exchange: Expires in:', data.expires_in);
+    
     return {
       accessToken: data.access_token,
       refreshToken: data.refresh_token,
