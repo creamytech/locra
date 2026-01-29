@@ -42,9 +42,19 @@ function getPool(): DatabasePool {
     try {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { Pool } = require('pg');
+      const connectionString = process.env.POSTGRES_URL || process.env.DATABASE_URL;
+      
+      // Supabase and most cloud Postgres providers require SSL
+      // Use rejectUnauthorized: false to accept their CA certificates
+      const sslConfig = connectionString?.includes('supabase') || connectionString?.includes('ssl=true')
+        ? { rejectUnauthorized: false }
+        : process.env.NODE_ENV === 'production'
+          ? { rejectUnauthorized: false }
+          : false;
+      
       _pool = new Pool({
-        connectionString: process.env.POSTGRES_URL || process.env.DATABASE_URL,
-        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+        connectionString,
+        ssl: sslConfig,
         max: 20,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 2000,
