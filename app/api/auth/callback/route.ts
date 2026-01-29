@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   const error = searchParams.get('error');
   const errorDescription = searchParams.get('error_description');
   
-  const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const origin = process.env.NEXT_PUBLIC_APP_URL || 'https://locra.co';
 
   // Handle OAuth errors
   if (error) {

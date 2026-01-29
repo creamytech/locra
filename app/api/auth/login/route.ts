@@ -13,10 +13,8 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const redirectTo = searchParams.get('redirect') || '/';
   
-  // Build the callback URL - use host header as fallback since origin isn't always present
-  const host = request.headers.get('host');
-  const protocol = host?.includes('localhost') ? 'http' : 'https';
-  const origin = request.headers.get('origin') || `${protocol}://${host}` || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  // Use NEXT_PUBLIC_APP_URL for consistency - this should match what's in Shopify
+  const origin = process.env.NEXT_PUBLIC_APP_URL || 'https://locra.co';
   const callbackUrl = `${origin}/api/auth/callback`;
 
   console.log('Login route: Starting OAuth flow');
