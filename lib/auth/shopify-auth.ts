@@ -20,8 +20,9 @@ const SHOP_ID = SHOPIFY_CUSTOMER_ACCOUNT_API_URL?.split('/').pop() || '';
 const AUTHORIZATION_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/oauth/authorize`;
 const TOKEN_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/oauth/token`;
 const LOGOUT_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/logout`;
-// Customer API GraphQL endpoint - format: https://shopify.com/{shop_id}/account/customer/api/graphql.json
-const CUSTOMER_API_ENDPOINT = `https://shopify.com/${SHOP_ID}/account/customer/api/graphql.json`;
+// Customer API GraphQL endpoint - format: https://{shop-domain}/customer/api/{version}/graphql
+// Use the store domain (e.g., locra-travel-club.myshopify.com) not shopify.com
+const CUSTOMER_API_ENDPOINT = `https://${SHOPIFY_STORE_DOMAIN}/customer/api/2024-10/graphql`;
 
 // Cookie names
 const ACCESS_TOKEN_COOKIE = 'shopify_customer_access_token';
