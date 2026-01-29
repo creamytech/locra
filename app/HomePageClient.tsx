@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -20,9 +21,15 @@ interface HomePageClientProps {
 
 export function HomePageClient({ featuredProducts }: HomePageClientProps) {
   const heroWords = ["Atlas", "Journey", "Archive", "Horizon"];
+  
+  // Force CSS animations to replay when navigating back to homepage
+  const [animationKey, setAnimationKey] = useState(0);
+  useEffect(() => {
+    setAnimationKey(Date.now());
+  }, []);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col" key={animationKey}>
       {/* ================================================
           1. CINEMATIC PORTAL HERO
           ================================================ */}

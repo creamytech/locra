@@ -310,47 +310,139 @@ export function TopNav({ featuredProducts }: TopNavProps) {
             transition={{ duration: 0.2 }}
             className="lg:hidden border-t border-stone-100 bg-white shadow-xl overflow-hidden"
           >
-            <div className="container-wide py-12 space-y-8">
-              <div className="space-y-4">
+            <div className="container-wide py-8 space-y-6 max-h-[80vh] overflow-y-auto">
+              {/* Main Navigation */}
+              <div className="space-y-3">
                 <p className="text-[10px] tracking-[0.2em] font-medium text-stone-400 uppercase">
-                  Discover
+                  Navigate
                 </p>
                 <Link
+                  href="/"
+                  className="block text-xl font-serif text-stone-900 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
                   href="/atlas"
-                  className="block text-2xl font-serif text-stone-900"
+                  className="block text-xl font-serif text-stone-900 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   The Atlas
                 </Link>
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.href || `/${item.id}`}
-                    className="block text-2xl font-serif text-stone-900"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+                <Link
+                  href="/shop"
+                  className="block text-xl font-serif text-stone-900 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Shop All
+                </Link>
               </div>
               
               <div className="h-px bg-stone-100" />
               
-              <div className="space-y-4">
+              {/* Destinations */}
+              <div className="space-y-3">
                 <p className="text-[10px] tracking-[0.2em] font-medium text-stone-400 uppercase">
-                  Regions
+                  Destinations
                 </p>
-                <Link href="/destinations?region=Cyclades" className="block text-lg font-serif text-stone-600">Cyclades</Link>
-                <Link href="/destinations?region=Mediterranean" className="block text-lg font-serif text-stone-600">Mediterranean</Link>
-                <Link href="/destinations?region=East-Asia" className="block text-lg font-serif text-stone-600">East Asia</Link>
+                <Link 
+                  href="/destinations/santorini" 
+                  className="flex items-center gap-3 text-lg font-serif text-stone-700 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="text-2xl">🇬🇷</span> Santorini
+                </Link>
+                <Link 
+                  href="/destinations/amalfi" 
+                  className="flex items-center gap-3 text-lg font-serif text-stone-700 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="text-2xl">🇮🇹</span> Amalfi Coast
+                </Link>
+                <Link 
+                  href="/destinations/kyoto" 
+                  className="flex items-center gap-3 text-lg font-serif text-stone-700 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="text-2xl">🇯🇵</span> Kyoto
+                </Link>
+              </div>
+
+              <div className="h-px bg-stone-100" />
+
+              {/* Travel Club */}
+              <div className="space-y-3">
+                <p className="text-[10px] tracking-[0.2em] font-medium text-stone-400 uppercase">
+                  Travel Club
+                </p>
+                <Link 
+                  href="/travel-club" 
+                  className="flex items-center gap-3 text-lg font-serif text-stone-700 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Compass className="w-5 h-5 text-gold" /> How It Works
+                </Link>
+                <Link 
+                  href="/passport" 
+                  className="flex items-center gap-3 text-lg font-serif text-stone-700 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Map className="w-5 h-5 text-gold" /> Your Passport
+                </Link>
+                <Link 
+                  href="/rewards" 
+                  className="flex items-center gap-3 text-lg font-serif text-stone-700 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Gift className="w-5 h-5 text-gold" /> Rewards
+                </Link>
+              </div>
+
+              <div className="h-px bg-stone-100" />
+
+              {/* Journal & Info */}
+              <div className="space-y-3">
+                <p className="text-[10px] tracking-[0.2em] font-medium text-stone-400 uppercase">
+                  Explore
+                </p>
+                <Link 
+                  href="/journal" 
+                  className="flex items-center gap-3 text-lg font-serif text-stone-700 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <BookOpen className="w-5 h-5 text-gold" /> The Journal
+                </Link>
+                <Link 
+                  href="/about" 
+                  className="flex items-center gap-3 text-lg font-serif text-stone-700 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Users className="w-5 h-5 text-gold" /> About LOCRA
+                </Link>
               </div>
 
               <div className="h-px bg-stone-100" />
               
-              <div className="space-y-4">
+              {/* Account */}
+              <div className="space-y-3">
                 <p className="text-[10px] tracking-[0.2em] font-medium text-stone-400 uppercase">
                   Account
                 </p>
-                <Link href="/passport" className="block text-lg font-serif text-stone-600">Your Passport</Link>
-                <Link href="/account" className="block text-lg font-serif text-stone-600">Account Settings</Link>
+                <Link 
+                  href="/account/login" 
+                  className="block text-lg font-serif text-stone-700 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  href="/account" 
+                  className="block text-lg font-serif text-stone-700 hover:text-gold transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Account Settings
+                </Link>
               </div>
             </div>
           </motion.div>

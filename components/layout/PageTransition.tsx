@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 interface PageTransitionProps {
   children: ReactNode;
@@ -10,6 +10,11 @@ interface PageTransitionProps {
 
 export function PageTransition({ children }: PageTransitionProps) {
   const pathname = usePathname();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -28,3 +33,4 @@ export function PageTransition({ children }: PageTransitionProps) {
     </AnimatePresence>
   );
 }
+
