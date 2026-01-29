@@ -21,12 +21,20 @@ export default function PassportDashboard() {
   // Get customer from auth context
   const { customer, isAuthenticated, isLoading: authLoading, login } = useAuth();
   
-  // Extract customer ID from the authenticated customer
+  // Extract customer data from the authenticated customer
   const shopifyCustomerId = customer?.id;
+  // Email is nested in emailAddress.emailAddress
+  const customerEmail = customer?.emailAddress?.emailAddress;
+  const customerFirstName = customer?.firstName ?? undefined;
+  const customerLastName = customer?.lastName ?? undefined;
   
-  const { status, loading, error, redeemReward, refetch } = useLoyalty({
+  const { status, loading, error, redeemReward, refetch, enrolling } = useLoyalty({
     shopifyCustomerId,
-    autoFetch: !!shopifyCustomerId, // Only fetch if we have a customer ID
+    email: customerEmail,
+    firstName: customerFirstName,
+    lastName: customerLastName,
+    autoFetch: !!shopifyCustomerId,
+    autoEnroll: true, // Auto-enroll new customers
   });
 
   const [activeTab, setActiveTab] = useState<'overview' | 'stamps' | 'quests'>('overview');
