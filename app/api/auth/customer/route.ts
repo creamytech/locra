@@ -19,6 +19,9 @@ export async function GET() {
       );
     }
 
+    // Log the token prefix to see what type of token we have
+    console.log('Customer API: Token prefix:', accessToken.substring(0, 20) + '...');
+    console.log('Customer API: Token starts with shcat_:', accessToken.startsWith('shcat_'));
     console.log('Customer API: Fetching customer with token...');
 
     // Fetch customer data
