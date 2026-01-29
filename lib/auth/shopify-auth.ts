@@ -9,13 +9,18 @@ import { cookies } from 'next/headers';
 // Environment variables (add to .env.local)
 const SHOPIFY_STORE_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN!;
 const SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID = process.env.SHOPIFY_CUSTOMER_ACCOUNT_API_CLIENT_ID!;
+// SHOPIFY_CUSTOMER_ACCOUNT_API_URL should be like: https://shopify.com/91266023789
 const SHOPIFY_CUSTOMER_ACCOUNT_API_URL = process.env.SHOPIFY_CUSTOMER_ACCOUNT_API_URL!;
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://localhost:3000';
 
-// OAuth endpoints
-const AUTHORIZATION_ENDPOINT = `${SHOPIFY_CUSTOMER_ACCOUNT_API_URL}/oauth/authorize`;
-const TOKEN_ENDPOINT = `${SHOPIFY_CUSTOMER_ACCOUNT_API_URL}/oauth/token`;
-const LOGOUT_ENDPOINT = `${SHOPIFY_CUSTOMER_ACCOUNT_API_URL}/logout`;
+// Extract shop ID from URL (e.g., "91266023789" from "https://shopify.com/91266023789")
+const SHOP_ID = SHOPIFY_CUSTOMER_ACCOUNT_API_URL?.split('/').pop() || '';
+
+// OAuth endpoints - Use the /authentication/ path as shown in Shopify Admin
+const AUTHORIZATION_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/oauth/authorize`;
+const TOKEN_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/oauth/token`;
+const LOGOUT_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/logout`;
+// Customer API endpoint uses the original URL format
 const CUSTOMER_API_ENDPOINT = `${SHOPIFY_CUSTOMER_ACCOUNT_API_URL}/account/customer/api/2024-01/graphql`;
 
 // Cookie names
