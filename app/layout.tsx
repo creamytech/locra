@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { ReferralProvider } from "@/components/loyalty";
+import { AuthProvider } from "@/components/auth";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -87,15 +88,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen flex flex-col">
-        <CartProvider>
-          <ReferralProvider>
-            <TopNavWrapper />
-            <main className="flex-1">
-              <PageTransition>{children}</PageTransition>
-            </main>
-            <Footer />
-          </ReferralProvider>
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <ReferralProvider>
+              <TopNavWrapper />
+              <main className="flex-1">
+                <PageTransition>{children}</PageTransition>
+              </main>
+              <Footer />
+            </ReferralProvider>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );
