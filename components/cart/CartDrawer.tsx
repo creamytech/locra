@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "./CartProvider";
+import { CartLoyaltyBanner } from "./CartLoyaltyBanner";
 import { formatPrice } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
@@ -143,7 +144,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
 
         {/* Footer */}
         {!isEmpty && (
-          <div className="p-8 bg-white border-t border-stone-200 space-y-6">
+          <div className="p-8 bg-white border-t border-stone-200 space-y-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] uppercase tracking-[0.2em] font-medium text-stone-400">Subtotal</span>
@@ -155,6 +156,12 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                 Customs, duties, and logistics calculated at departure.
               </p>
             </div>
+
+            {/* Loyalty Banner */}
+            <CartLoyaltyBanner
+              cartTotal={Math.floor(parseFloat(cart.cost.subtotalAmount.amount) * 100)}
+              isLoggedIn={false} // TODO: Connect to auth state
+            />
             
             <Button
               className="w-full h-14 rounded-none bg-stone-900 text-white hover:bg-gold uppercase tracking-[0.2em] text-[10px] font-bold transition-all duration-500 shadow-xl"

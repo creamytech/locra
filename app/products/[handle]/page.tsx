@@ -13,6 +13,7 @@ import {
 import { PortalArchFrame } from "@/components/portal/PortalArch";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
 import { ArtifactCard } from "@/components/product/ArtifactCard";
+import { ProductMilesBanner } from "@/components/loyalty";
 import { getProductByHandle, getCollectionByHandle } from "@/lib/shopify";
 import { formatPrice, cleanCopy } from "@/lib/utils";
 import { DESTINATIONS } from "@/lib/data/atlas";
@@ -148,8 +149,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <Separator className="bg-stone-100" />
 
                 {/* ADD TO SUITCASE MODULE */}
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <AddToCartButton variants={product.variants} />
+                  
+                  {/* Loyalty Miles Banner */}
+                  <ProductMilesBanner
+                    price={Math.floor(parseFloat(price.amount) * 100)}
+                    destinationName={destination?.name}
+                  />
                 </div>
 
                 <Separator className="bg-stone-100" />

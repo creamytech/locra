@@ -1,37 +1,42 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { WobbleCard } from "@/components/ui/wobble-card";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { SparklesCore } from "@/components/ui/sparkles";
 import Link from "next/link";
 import Image from "next/image";
 import { Compass, Landmark, Wind, Sun } from "lucide-react";
 
-export const metadata = {
-  title: "Our Story — LOCRA Manifesto",
-  description: "The philosophy behind LOCRA. We create wearable artifacts inspired by the world's most atmospheric coordinates.",
-};
+const manifesto = "We do not sell clothing. We preserve the spirit of a destination in a wearable object.";
+
+const principles = [
+  {
+    icon: Wind,
+    title: "Atmospheric Precision",
+    description: "We don't design for seasons; we design for specific coordinates. Every thread captures the light, scent, and spirit of a unique place.",
+    color: "bg-blue-900/50"
+  },
+  {
+    icon: Landmark,
+    title: "Archival Quality",
+    description: "Our artifacts are made to last as long as the memories of the journey. We use natural fibers and heritage techniques that age with grace.",
+    color: "bg-amber-900/50"
+  },
+  {
+    icon: Sun,
+    title: "Curated Presence",
+    description: "In an age of fast consumption, we advocate for slow exploration. We release collections only when the story is fully lived.",
+    color: "bg-gold/30"
+  }
+];
 
 export default function AboutPage() {
-  const principles = [
-    {
-      icon: <Wind className="w-6 h-6 text-gold" />,
-      title: "Atmospheric Precision",
-      description: "We don't design for seasons; we design for specific coordinates. Every thread captures the light, scent, and spirit of a unique place."
-    },
-    {
-      icon: <Landmark className="w-6 h-6 text-gold" />,
-      title: "Archival Quality",
-      description: "Our artifacts are made to last as long as the memories of the journey. We use natural fibers and heritage techniques that age with grace."
-    },
-    {
-      icon: <Sun className="w-6 h-6 text-gold" />,
-      title: "Curated Presence",
-      description: "In an age of fast consumption, we advocate for slow exploration. We release collections only when the story is fully lived."
-    }
-  ];
-
   return (
     <div className="flex flex-col bg-white">
-      {/* 1. MANIFESTO HERO */}
+      {/* 1. MANIFESTO HERO WITH TEXT GENERATE */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image 
@@ -40,14 +45,17 @@ export default function AboutPage() {
             fill
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-stone-900/40" />
+          <div className="absolute inset-0 bg-stone-900/50" />
         </div>
         
         <div className="container-narrow relative z-10 text-center text-white">
           <h1 className="text-6xl md:text-8xl font-serif mb-8 italic drop-shadow-2xl">The Manifesto</h1>
-          <p className="text-xl md:text-2xl text-white/90 font-serif italic max-w-2xl mx-auto leading-relaxed">
-            &ldquo;We do not sell clothing. We preserve the spirit of a destination in a wearable object.&rdquo;
-          </p>
+          <div className="text-xl md:text-2xl text-white/90 font-serif italic max-w-2xl mx-auto leading-relaxed">
+            <TextGenerateEffect 
+              words={`"${manifesto}"`}
+              className="text-white/90 font-serif italic"
+            />
+          </div>
         </div>
       </section>
 
@@ -77,8 +85,21 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 3. THE GRID PRINCIPLES */}
-      <section className="py-32 bg-stone-900 text-white relative">
+      {/* 3. THE GRID PRINCIPLES - WOBBLE CARDS */}
+      <section className="py-32 bg-stone-900 text-white relative overflow-hidden">
+        {/* Sparkles Background */}
+        <div className="absolute inset-0">
+          <SparklesCore
+            id="principles-sparkles"
+            background="transparent"
+            minSize={0.4}
+            maxSize={1}
+            particleDensity={30}
+            className="w-full h-full"
+            particleColor="#C4A052"
+          />
+        </div>
+        
         <div className="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none">
            <Compass className="w-[500px] h-[500px] text-gold absolute -top-20 -right-20 rotate-12" />
         </div>
@@ -89,18 +110,28 @@ export default function AboutPage() {
              <h2 className="font-serif text-4xl md:text-6xl mb-8 italic">Archival Principles</h2>
            </div>
            
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
-             {principles.map((p, idx) => (
-               <div key={idx} className="space-y-6 group">
-                  <div className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-500">
-                    {p.icon}
-                  </div>
-                  <h3 className="font-serif text-2xl italic">{p.title}</h3>
-                  <p className="text-stone-400 font-light leading-relaxed">
-                    {p.description}
-                  </p>
-               </div>
-             ))}
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+             {principles.map((p, idx) => {
+               const Icon = p.icon;
+               return (
+                 <WobbleCard
+                   key={idx}
+                   containerClassName={`h-[350px] ${p.color}`}
+                 >
+                   <div className="p-8 h-full flex flex-col justify-end">
+                     <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center mb-6 group-hover:bg-gold group-hover:border-gold transition-all duration-500">
+                       <Icon className="w-5 h-5 text-gold" />
+                     </div>
+                     <div>
+                       <h3 className="font-serif text-2xl italic text-white mb-4">{p.title}</h3>
+                       <p className="text-stone-300 font-light leading-relaxed">
+                         {p.description}
+                       </p>
+                     </div>
+                   </div>
+                 </WobbleCard>
+               );
+             })}
            </div>
         </div>
       </section>
@@ -133,9 +164,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 5. FINALE CTA */}
-      <section className="py-40 bg-white border-t border-stone-100">
-        <div className="container-narrow text-center space-y-12">
+      {/* 5. FINALE CTA WITH SPARKLES */}
+      <section className="py-40 bg-white border-t border-stone-100 relative overflow-hidden">
+        <div className="container-narrow text-center space-y-12 relative z-10">
            <h2 className="font-serif text-4xl md:text-5xl italic">Join the Expedition.</h2>
            <p className="text-stone-500 max-w-md mx-auto font-light leading-relaxed">
              Become a resident of the Atlas. Follow our journeys and secure artifacts from the next destination.

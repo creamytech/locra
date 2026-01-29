@@ -57,10 +57,12 @@ const FALLBACK_ARTIFACTS: Record<string, {
 interface MegaMenuProps {
   isOpen: boolean;
   onClose: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
   featuredProducts?: Record<string, Product | null>;
 }
 
-export function MegaMenu({ isOpen, onClose, featuredProducts }: MegaMenuProps) {
+export function MegaMenu({ isOpen, onClose, onMouseEnter, onMouseLeave, featuredProducts }: MegaMenuProps) {
   const [hoveredDestination, setHoveredDestination] = useState<Destination>(
     DESTINATIONS[0]
   );
@@ -71,38 +73,17 @@ export function MegaMenu({ isOpen, onClose, featuredProducts }: MegaMenuProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 top-20 bg-stone-900/30 backdrop-blur-sm z-[90]"
-          />
-
-          {/* Menu Panel - starts from top-0 with an invisible bridge for seamless hover */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="absolute top-0 left-0 w-full z-[100]"
-            onMouseLeave={onClose}
-          >
-            {/* Invisible bridge to allow hover from nav to menu */}
-            <div className="h-20 w-full" />
-            
-            {/* Visible menu content */}
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="bg-white border-b border-stone-200 shadow-2xl overflow-hidden"
-            >
-              <div className="container-wide py-10">
-                <div className="grid grid-cols-12 gap-8">
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute left-0 right-0 top-full bg-white border-b border-stone-200 shadow-xl overflow-hidden z-[100]"
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave || onClose}
+        >
+          <div className="container-wide py-10">
+            <div className="grid grid-cols-12 gap-8">
                   
                   {/* Column 1: Atlas Regions - Chapter Style */}
                   <div className="col-span-2 border-r border-stone-100 pr-6">
@@ -346,15 +327,18 @@ export function MegaMenu({ isOpen, onClose, featuredProducts }: MegaMenuProps) {
                       </motion.div>
                     </AnimatePresence>
                   </div>
+                  {/* End of Column 3 */}
+
                 </div>
+                {/* End of grid */}
               </div>
+              {/* End of container-wide */}
 
               {/* Bottom Accent - Subtle Gold Line */}
               <div className="h-0.5 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
             </motion.div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  );
+          )}
+        </AnimatePresence>
+      );
 }
+

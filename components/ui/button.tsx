@@ -4,28 +4,41 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium tracking-wide transition-all duration-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "bg-stone-900 text-white shadow hover:bg-gold btn-premium",
+          "bg-stone-900 text-white hover:bg-stone-800 active:bg-stone-950 shadow-luxury-sm hover:shadow-luxury",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
-          "border border-stone-200 bg-transparent text-stone-600 shadow-sm hover:bg-stone-50 hover:text-stone-900 hover:border-stone-300",
+          "border border-stone-200 bg-transparent text-stone-700 hover:bg-stone-50 hover:text-stone-900 hover:border-stone-300",
         secondary:
-          "bg-stone-100 text-stone-900 shadow-sm hover:bg-stone-200",
-        ghost: "text-stone-500 hover:bg-stone-100 hover:text-stone-900",
-        link: "text-gold underline-offset-4 hover:underline",
-        gold: "bg-gold text-stone-950 shadow hover:bg-gold-700 hover:text-white btn-premium",
+          "bg-stone-100 text-stone-900 hover:bg-stone-200 active:bg-stone-300",
+        ghost: 
+          "text-stone-600 hover:bg-stone-100 hover:text-stone-900",
+        link: 
+          "text-gold underline-offset-4 hover:underline p-0 h-auto",
+        gold: 
+          "bg-gold text-stone-950 hover:bg-gold-600 active:bg-gold-700 shadow-luxury-sm hover:shadow-gold-glow",
+        // Premium luxury variants
+        luxury:
+          "bg-gradient-to-r from-stone-900 to-stone-800 text-white hover:from-stone-800 hover:to-stone-700 shadow-luxury hover:shadow-luxury-lg",
+        "luxury-outline":
+          "border-2 border-stone-900 text-stone-900 hover:bg-stone-900 hover:text-white",
+        champagne:
+          "bg-champagne text-stone-900 hover:bg-gold hover:text-white active:bg-gold-600 shadow-luxury-sm",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8 text-base",
-        xl: "h-14 rounded-md px-10 text-lg",
-        icon: "h-10 w-10",
+        default: "h-11 px-5 py-2.5 rounded-sm",
+        sm: "h-9 px-4 text-xs rounded-sm",
+        lg: "h-12 px-8 text-base rounded-sm",
+        xl: "h-14 px-10 text-base rounded-sm font-medium",
+        "2xl": "h-16 px-12 text-lg rounded-sm font-medium",
+        icon: "h-10 w-10 rounded-sm",
+        "icon-sm": "h-8 w-8 rounded-sm",
+        "icon-lg": "h-12 w-12 rounded-sm",
       },
     },
     defaultVariants: {

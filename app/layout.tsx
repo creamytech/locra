@@ -3,7 +3,9 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { TopNavWrapper } from "@/components/layout/TopNavWrapper";
 import { Footer } from "@/components/layout/Footer";
+import { PageTransition } from "@/components/layout/PageTransition";
 import { CartProvider } from "@/components/cart/CartProvider";
+import { ReferralProvider } from "@/components/loyalty";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -86,9 +88,13 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen flex flex-col">
         <CartProvider>
-          <TopNavWrapper />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <ReferralProvider>
+            <TopNavWrapper />
+            <main className="flex-1">
+              <PageTransition>{children}</PageTransition>
+            </main>
+            <Footer />
+          </ReferralProvider>
         </CartProvider>
       </body>
     </html>
