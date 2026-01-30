@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { CurvedBadge } from "@/components/ui/CurvedBadge";
 
 interface DestinationCardProps {
   handle: string;
@@ -28,15 +29,17 @@ export function DestinationCard({
   size = "default",
 }: DestinationCardProps) {
   const sizeStyles = {
-    small: "w-[200px]",
-    default: "w-[280px]",
-    large: "w-[320px]",
+    small: { className: "w-[200px]", width: 200 },
+    default: { className: "w-[280px]", width: 280 },
+    large: { className: "w-[320px]", width: 320 },
   };
+
+  const { className: sizeClass, width: cardWidth } = sizeStyles[size];
 
   return (
     <Link 
       href={`/destinations/${handle}`}
-      className={cn("group block flex-shrink-0", sizeStyles[size], className)}
+      className={cn("group block flex-shrink-0", sizeClass, className)}
     >
       <article>
         {/* Portal Arch Image Container */}
@@ -61,12 +64,13 @@ export function DestinationCard({
           {/* Inner shadow for depth */}
           <div className="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.1)]" />
           
-          {/* Region Badge - Curved at top */}
-          <div className="absolute top-5 left-1/2 -translate-x-1/2 z-20">
-            <span className="bg-white/95 backdrop-blur-sm text-stone-700 text-[10px] uppercase tracking-[0.15em] font-semibold px-4 py-1.5 rounded-full shadow-sm">
-              {region}
-            </span>
-          </div>
+          {/* Curved Region Badge - Follows arch apex like mobile app */}
+          <CurvedBadge 
+            text={region} 
+            width={cardWidth} 
+            position="top" 
+            color="#FFFFFF"
+          />
           
           {/* Content - Bottom of card */}
           <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
@@ -113,6 +117,9 @@ export function DestinationCardGrid({
   pieceCount,
   className,
 }: DestinationCardProps) {
+  // Default grid card width - will be responsive but base on typical mobile-like width
+  const cardWidth = 180;
+
   return (
     <Link 
       href={`/destinations/${handle}`}
@@ -138,12 +145,13 @@ export function DestinationCardGrid({
           {/* Atmospheric overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
           
-          {/* Region Badge */}
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
-            <span className="bg-white/95 backdrop-blur-sm text-stone-700 text-[9px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-full shadow-sm">
-              {region}
-            </span>
-          </div>
+          {/* Curved Region Badge - Follows arch apex like mobile app */}
+          <CurvedBadge 
+            text={region} 
+            width={cardWidth} 
+            position="top" 
+            color="#FFFFFF"
+          />
           
           {/* Content */}
           <div className="absolute bottom-0 left-0 right-0 p-4 z-20">

@@ -74,7 +74,7 @@ export const DESTINATIONS: Destination[] = [
     tagline: "Ochre Walls & Shadows",
     poeticDescription: "The rhythmic pulse of the Medina.",
     story: "A sensory immersion in the Red City. Our Marrakech pieces are inspired by the geometric shadows of the Jardin Majorelle.",
-    thumbnailUrl: "https://images.unsplash.com/photo-1597212618440-806262de4fa6?auto=format&fit=crop&q=80&w=400",
+    thumbnailUrl: "https://images.unsplash.com/photo-1539020140153-e479b8c22e70?auto=format&fit=crop&q=80&w=400",
     heroImageUrl: "https://images.unsplash.com/photo-1489493585363-d69421e0ede3?auto=format&fit=crop&q=80&w=1600",
     featuredArtifactHandle: "medina-dye-scarf",
   },

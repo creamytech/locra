@@ -3,6 +3,7 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { formatPrice, cn } from "@/lib/utils";
 import { ShoppingBag, X, MapPin, ArrowRight, ZoomIn, Check } from "lucide-react";
 import type { Product, ProductVariant } from "@/lib/shopify/types";
 import { useCart } from "@/components/cart/CartProvider";
+import { CurvedBadge } from "@/components/ui/CurvedBadge";
 
 interface ProductExpandableCardsProps {
   products: Product[];
@@ -26,6 +28,14 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
   const id = useId();
   const ref = useRef<HTMLDivElement>(null);
   const { addItem } = useCart();
+  const router = useRouter();
+
+  // Handle navigation to product page - restore scroll first
+  const handleViewProductPage = (handle: string) => {
+    document.body.style.overflow = "auto";
+    setActive(null);
+    router.push(`/products/${handle}`);
+  };
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -81,13 +91,11 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
     setIsAdding(true);
     try {
       await addItem(selectedVariant.id, 1);
-      setJustAdded(true);
-      setTimeout(() => {
-        setJustAdded(false);
-      }, 2000);
+      // Close modal and restore scroll - cart drawer opens automatically via CartProvider
+      document.body.style.overflow = "auto";
+      setActive(null);
     } catch (error) {
       console.error("Failed to add to cart:", error);
-    } finally {
       setIsAdding(false);
     }
   };
@@ -176,32 +184,41 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
         )}
       </AnimatePresence>
 
-      {/* Expanded Card Modal */}
+      {/* Expanded Card Modal - Full Portal Arch Shape */}
       <AnimatePresence>
         {active && (
-          <div className="fixed inset-0 grid place-items-center z-[110] p-4 overflow-y-auto">
-            {/* Close Button */}
+          <div className="fixed inset-0 grid place-items-center z-[110] p-4 md:p-8">
+            {/* Close Button - Positioned at top of arch */}
             <motion.button
               key={`button-${active.id}-${id}`}
-              layout
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute top-4 right-4 flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full h-10 w-10 transition-colors z-[120]"
+              className="absolute top-6 right-6 flex items-center justify-center bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full h-11 w-11 transition-colors z-[120] shadow-lg"
               onClick={() => setActive(null)}
             >
               <X className="w-5 h-5 text-white" />
             </motion.button>
 
+            {/* Portal Arch Modal Container - Immediate arch shape */}
             <motion.div
-              layoutId={`card-${active.id}-${id}`}
+              key={`modal-${active.id}`}
               ref={ref}
-              className="w-full max-w-[1000px] max-h-[90vh] flex flex-col md:flex-row bg-white rounded-2xl overflow-hidden shadow-2xl my-8"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="w-full max-w-[420px] max-h-[85vh] bg-white shadow-2xl overflow-hidden flex flex-col"
+              style={{
+                borderRadius: "50% 50% 20px 20px / 18% 18% 0 0",
+              }}
             >
-              {/* Image - Clickable for Zoom */}
-              <motion.div 
-                layoutId={`image-${active.id}-${id}`}
-                className="relative w-full md:w-1/2 h-80 md:h-auto min-h-[450px] cursor-zoom-in group"
+              {/* Portal Arch Image - Compact Top Section */}
+              <div 
+                className="relative w-full aspect-square cursor-zoom-in group overflow-hidden flex-shrink-0"
+                style={{
+                  borderRadius: "50% 50% 0 0 / 30% 30% 0 0",
+                }}
                 onClick={() => setIsImageZoomed(true)}
               >
                 <Image
@@ -210,23 +227,26 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
+                {/* Inner shadow for depth */}
+                <div className="absolute inset-0 shadow-[inset_0_2px_40px_rgba(0,0,0,0.1)] pointer-events-none" />
                 {/* Zoom indicator */}
                 <div className="absolute inset-0 flex items-center justify-center bg-stone-900/0 group-hover:bg-stone-900/20 transition-colors">
-                  <span className="flex items-center gap-2 px-4 py-2 bg-white/90 rounded-full text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="flex items-center gap-2 px-4 py-2 bg-white/90 rounded-full text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
                     <ZoomIn className="w-4 h-4" />
                     Click to zoom
                   </span>
                 </div>
-              </motion.div>
+              </div>
 
-              {/* Content */}
-              <div className="flex-1 p-8 md:p-10 flex flex-col overflow-y-auto max-h-[90vh] md:max-h-none">
+              {/* Content Section - Centered */}
+              <div className="p-6 flex flex-col flex-1 overflow-y-auto text-center">
                 <div className="flex-1">
                   {/* Category Badge */}
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
+                    className="flex justify-center"
                   >
                     <Badge variant="outline" className="border-gold/40 text-gold mb-4">
                       <MapPin className="w-3 h-3 mr-1.5" />
@@ -237,7 +257,7 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                   {/* Title */}
                   <motion.h3
                     layoutId={`title-${active.id}-${id}`}
-                    className="font-serif text-2xl md:text-3xl text-stone-900 mb-3"
+                    className="font-serif text-xl md:text-2xl text-stone-900 mb-2"
                   >
                     {active.title}
                   </motion.h3>
@@ -247,28 +267,10 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.15 }}
-                    className="text-2xl font-serif text-gold mb-6"
+                    className="text-xl font-serif text-gold mb-5"
                   >
                     {selectedVariant ? getVariantPrice(selectedVariant) : getPrice(active)}
                   </motion.p>
-
-                  {/* Description - Truncated */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="mb-6"
-                  >
-                    <p className="text-stone-600 leading-relaxed text-sm line-clamp-3">
-                      {active.description || "A carefully curated piece from our global collection."}
-                    </p>
-                    <Link 
-                      href={`/products/${active.handle}`}
-                      className="text-gold text-sm font-medium hover:underline mt-2 inline-block"
-                    >
-                      Read full description →
-                    </Link>
-                  </motion.div>
 
                   {/* Color Selection */}
                   {getColorOptions(active).length > 0 && (
@@ -276,12 +278,12 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.25 }}
-                      className="mb-6"
+                      className="mb-5"
                     >
-                      <p className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-3">
+                      <p className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">
                         Color: <span className="text-stone-900">{selectedColor}</span>
                       </p>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap justify-center gap-2">
                         {getColorOptions(active).map((color) => (
                           <button
                             key={color}
@@ -290,7 +292,7 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                               if (variant) setSelectedVariant(variant);
                             }}
                             className={cn(
-                              "px-4 py-2 text-sm border rounded-lg transition-all",
+                              "px-3 py-1.5 text-sm border rounded-lg transition-all",
                               selectedColor === color
                                 ? "border-gold bg-gold/10 text-gold font-medium"
                                 : "border-stone-200 text-stone-600 hover:border-stone-400"
@@ -309,12 +311,12 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.3 }}
-                      className="mb-6"
+                      className="mb-5"
                     >
-                      <p className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-3">
+                      <p className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-2">
                         Size: <span className="text-stone-900">{selectedSize}</span>
                       </p>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap justify-center gap-2">
                         {getSizeOptions(active).map((size) => {
                           const variant = findVariant(active, size, selectedColor || '');
                           const isAvailable = variant?.availableForSale !== false;
@@ -327,7 +329,7 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                               }}
                               disabled={!isAvailable}
                               className={cn(
-                                "w-12 h-12 text-sm border rounded-lg transition-all font-medium",
+                                "w-10 h-10 text-sm border rounded-lg transition-all font-medium",
                                 selectedSize === size
                                   ? "border-gold bg-gold text-white"
                                   : isAvailable
@@ -363,13 +365,13 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.35 }}
-                  className="flex flex-col gap-3 pt-4 border-t border-stone-100"
+                  className="flex flex-col gap-2 pt-4 border-t border-stone-100"
                 >
                   <Button 
                     onClick={handleAddToCart}
                     disabled={!selectedVariant?.availableForSale || isAdding}
                     className={cn(
-                      "h-14 text-base font-medium transition-all",
+                      "h-12 text-base font-medium transition-all",
                       justAdded 
                         ? "bg-green-600 hover:bg-green-600" 
                         : "bg-gold hover:bg-gold/90 text-white"
@@ -392,13 +394,11 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
                   
                   <Button 
                     variant="outline"
-                    asChild
-                    className="h-12 border-stone-200 hover:border-gold hover:text-gold"
+                    onClick={() => handleViewProductPage(active.handle)}
+                    className="h-10 border-stone-200 hover:border-gold hover:text-gold flex items-center justify-center gap-2 text-sm"
                   >
-                    <Link href={`/products/${active.handle}`} className="flex items-center justify-center gap-2">
-                      View Full Product Page
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
+                    View Full Product Page
+                    <ArrowRight className="w-4 h-4" />
                   </Button>
                 </motion.div>
 
@@ -417,52 +417,88 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
         )}
       </AnimatePresence>
 
-      {/* Grid of Cards */}
-      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-20 ${className || ''}`}>
-        {products.map((product) => (
-          <motion.div
-            layoutId={`card-${product.id}-${id}`}
-            key={product.id}
-            onClick={() => setActive(product)}
-            className="group cursor-pointer"
-          >
-            {/* Image Container */}
-            <motion.div 
-              layoutId={`image-${product.id}-${id}`}
-              className="relative aspect-[3/4] mb-6 overflow-hidden bg-stone-100"
-            >
-              <Image
-                src={product.images[0]?.url || "https://images.unsplash.com/photo-1618354691373-d851c5c3a990"}
-                alt={product.title}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-stone-900/0 group-hover:bg-stone-900/20 transition-colors duration-300 flex items-center justify-center">
-                <span className="text-white text-sm font-medium tracking-wide uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-stone-900/80 px-4 py-2 rounded-full">
-                  Quick View
-                </span>
-              </div>
-            </motion.div>
+      {/* Grid of Cards - Portal Arch Styling like PieceCard */}
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16 ${className || ''}`}>
+        {products.map((product) => {
+          // Get destination from tags
+          const destination = product.tags.find(tag => 
+            ['santorini', 'kyoto', 'amalfi', 'marrakech', 'las vegas', 'santa monica'].some(d => 
+              tag.toLowerCase().includes(d)
+            )
+          );
+          
+          // Get style label from tags
+          const styleLabel = product.tags.find(tag => 
+            ['beach vibes', 'casual style', 'artistic tee', 'beach getaway', 'adventure', 'classic', 'vintage'].some(s => 
+              tag.toLowerCase().includes(s)
+            )
+          ) || destination || product.productType || "Piece";
 
-            {/* Text Content */}
-            <div className="space-y-2">
-              <p className="text-[10px] tracking-[0.2em] uppercase text-gold font-medium">
-                {product.productType || "Piece"}
-              </p>
-              <motion.h3
-                layoutId={`title-${product.id}-${id}`}
-                className="font-serif text-xl text-stone-900 group-hover:text-gold transition-colors duration-300"
+          return (
+            <div
+              key={product.id}
+              onClick={() => setActive(product)}
+              className="group cursor-pointer relative">
+
+              {/* Portal Arch Image Container */}
+              <div 
+                className="relative aspect-[3/4] mb-0 overflow-hidden bg-stone-100"
+                style={{ 
+                  borderRadius: "50% 50% 16px 16px / 40% 40% 0 0",
+                }}
               >
-                {product.title}
-              </motion.h3>
-              <p className="font-serif text-lg text-stone-600">
-                {getPrice(product)}
-              </p>
+                <Image
+                  src={product.images[0]?.url || "https://images.unsplash.com/photo-1618354691373-d851c5c3a990"}
+                  alt={product.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                
+                {/* Inner shadow for depth */}
+                <div className="absolute inset-0 shadow-[inset_0_2px_20px_rgba(0,0,0,0.06)] pointer-events-none" />
+                
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-stone-900/0 group-hover:bg-stone-900/20 transition-colors duration-300 flex items-center justify-center">
+                  <span className="text-white text-sm font-medium tracking-wide uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-stone-900/80 px-4 py-2 rounded-full">
+                    Quick View
+                  </span>
+                </div>
+              </div>
+
+              {/* Curved Style Label - SVG following arch outline on left */}
+              <CurvedBadge 
+                text={styleLabel} 
+                width={280} 
+                position="left" 
+                color="#a8a29e"
+              />
+
+              {/* Product Info Section - White background below */}
+              <div className="bg-white rounded-b-2xl pt-5 pb-4 px-3 text-center -mt-3 relative z-10 shadow-sm">
+                {/* Product Type */}
+                <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 font-medium mb-2">
+                  {product.productType || "Piece"}
+                </p>
+                
+                {/* Product Name */}
+                <h3
+                  className="font-serif text-sm text-stone-900 group-hover:text-gold transition-colors duration-300 leading-tight mb-3 line-clamp-2"
+                >
+                  {product.title}
+                </h3>
+                
+                {/* Price with decorative dividers */}
+                <div className="flex items-center justify-center gap-3">
+                  <span className="flex-1 h-px bg-gradient-to-r from-transparent to-stone-200 max-w-8" />
+                  <p className="text-sm font-semibold text-stone-700">
+                    {getPrice(product)}
+                  </p>
+                  <span className="flex-1 h-px bg-gradient-to-l from-transparent to-stone-200 max-w-8" />
+                </div>
+              </div>
             </div>
-          </motion.div>
-        ))}
+          );
+        })}
       </div>
     </>
   );

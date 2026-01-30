@@ -7,6 +7,8 @@ import type { Product } from "@/lib/shopify/types";
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
 import { useFavorites } from "@/lib/context/FavoritesContext";
+import { CurvedBadge } from "@/components/ui/CurvedBadge";
+import { useRef, useState, useEffect } from "react";
 
 interface PieceCardProps {
   product: Product;
@@ -18,6 +20,21 @@ interface PieceCardProps {
 export function PieceCard({ product, priority = false, className, destination }: PieceCardProps) {
   const price = product.priceRange.minVariantPrice;
   const { isFavorite, toggleFavorite } = useFavorites();
+  const cardRef = useRef<HTMLElement>(null);
+  const [cardWidth, setCardWidth] = useState(200);
+
+  // Measure card width for CurvedBadge SVG path calculation
+  useEffect(() => {
+    if (cardRef.current) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          setCardWidth(entry.contentRect.width);
+        }
+      });
+      resizeObserver.observe(cardRef.current);
+      return () => resizeObserver.disconnect();
+    }
+  }, []);
 
   // Extract destination from tags if not provided
   const productDestination = destination || product.tags.find(tag => 
@@ -31,10 +48,10 @@ export function PieceCard({ product, priority = false, className, destination }:
     ['beach vibes', 'casual style', 'artistic tee', 'beach getaway', 'adventure', 'classic', 'vintage'].some(s => 
       tag.toLowerCase().includes(s)
     )
-  ) || product.productType || "Piece";
+  ) || productDestination || product.productType || "Piece";
 
   return (
-    <article className={cn("group relative", className)}>
+    <article ref={cardRef} className={cn("group relative", className)}>
       <Link href={`/products/${product.handle}`} className="block">
         {/* Portal Arch Image Container */}
         <div 
@@ -63,19 +80,13 @@ export function PieceCard({ product, priority = false, className, destination }:
         </div>
       </Link>
 
-      {/* Curved Style Label - Following arch outline on left */}
-      <div 
-        className="absolute top-[8%] left-0 z-20 pointer-events-none"
-        style={{
-          writingMode: 'vertical-rl',
-          textOrientation: 'mixed',
-          transform: 'rotate(180deg)',
-        }}
-      >
-        <span className="text-[10px] uppercase tracking-[0.2em] text-stone-400 font-medium">
-          {styleLabel}
-        </span>
-      </div>
+      {/* Curved Style Label - Following arch outline on left like mobile app */}
+      <CurvedBadge 
+        text={styleLabel} 
+        width={cardWidth} 
+        position="left" 
+        color="#a8a29e" // stone-400
+      />
 
       {/* Favorite Button - Top right */}
       <button
