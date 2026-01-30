@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface DestinationCardProps {
@@ -29,25 +28,22 @@ export function DestinationCard({
   size = "default",
 }: DestinationCardProps) {
   const sizeStyles = {
-    small: "aspect-[3/4] min-w-[200px]",
-    default: "aspect-[4/5] min-w-[280px]",
-    large: "aspect-[3/4] min-w-[320px]",
+    small: "w-[200px]",
+    default: "w-[280px]",
+    large: "w-[320px]",
   };
 
   return (
     <Link 
       href={`/destinations/${handle}`}
-      className={cn("group block flex-shrink-0", className)}
+      className={cn("group block flex-shrink-0", sizeStyles[size], className)}
     >
-      <article className="relative">
-        {/* Portal Arch Image Container - Full rounded top like mobile */}
+      <article>
+        {/* Portal Arch Image Container */}
         <div 
-          className={cn(
-            "relative overflow-hidden bg-gradient-to-b from-stone-200 to-stone-300",
-            sizeStyles[size]
-          )}
+          className="relative aspect-[4/5] overflow-hidden bg-stone-200"
           style={{ 
-            borderRadius: "50% 50% 20px 20px / 30% 30% 0 0",
+            borderRadius: "50% 50% 16px 16px / 30% 30% 0 0",
           }}
         >
           {/* Image */}
@@ -56,55 +52,48 @@ export function DestinationCard({
             alt={name}
             fill
             className="object-cover transition-all duration-700 ease-out group-hover:scale-105"
-            sizes="(max-width: 640px) 80vw, (max-width: 1024px) 40vw, 320px"
+            sizes="(max-width: 640px) 80vw, 320px"
           />
           
           {/* Atmospheric overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
           
           {/* Inner shadow for depth */}
-          <div className="absolute inset-0 shadow-[inset_0_0_60px_rgba(0,0,0,0.15)]" />
+          <div className="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.1)]" />
           
-          {/* Piece count badge - top right */}
-          {pieceCount !== undefined && (
-            <div className="absolute top-6 right-6 z-20">
-              <span className="bg-black/60 backdrop-blur-sm text-white text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-full">
-                {pieceCount} Pieces
-              </span>
-            </div>
-          )}
+          {/* Region Badge - Curved at top */}
+          <div className="absolute top-5 left-1/2 -translate-x-1/2 z-20">
+            <span className="bg-white/95 backdrop-blur-sm text-stone-700 text-[10px] uppercase tracking-[0.15em] font-semibold px-4 py-1.5 rounded-full shadow-sm">
+              {region}
+            </span>
+          </div>
           
           {/* Content - Bottom of card */}
-          <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-            <h3 className="font-serif text-3xl md:text-4xl text-white mb-2 group-hover:text-gold transition-colors drop-shadow-lg">
+          <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
+            <h3 className="font-serif text-2xl md:text-3xl text-white mb-1 group-hover:text-gold transition-colors drop-shadow-lg">
               {name}
             </h3>
             
-            {tagline && (
-              <p className="text-sm text-white/80 italic mb-4 font-serif">
-                "{tagline}"
-              </p>
-            )}
-            
-            {/* Coordinates with decorative gold lines */}
-            <div className="flex items-center gap-4">
-              <span className="flex-1 h-px bg-gradient-to-r from-transparent to-gold/50" />
-              <span className="text-[11px] uppercase tracking-[0.15em] text-gold font-medium">
-                {coordinates}
-              </span>
-              <span className="flex-1 h-px bg-gradient-to-l from-transparent to-gold/50" />
-            </div>
+            {/* Coordinates with gold color */}
+            <span className="text-[11px] uppercase tracking-[0.1em] text-gold font-medium">
+              {coordinates}
+            </span>
           </div>
         </div>
 
-        {/* Curved Region Badge - Positioned at top of arch */}
-        <div className="absolute top-6 left-6 z-20">
-          <Badge 
-            variant="secondary" 
-            className="bg-white/95 backdrop-blur-sm text-stone-700 border-0 shadow-sm rounded-full px-4 py-1.5 text-[10px] uppercase tracking-wider font-semibold"
-          >
-            {region}
-          </Badge>
+        {/* Info Below Card - Like Mobile */}
+        <div className="pt-4 px-1">
+          {tagline && (
+            <p className="text-sm text-stone-500 italic font-serif mb-1 line-clamp-1">
+              "{tagline}"
+            </p>
+          )}
+          
+          {pieceCount !== undefined && (
+            <span className="text-[11px] uppercase tracking-[0.15em] text-gold font-semibold">
+              {pieceCount} Pieces
+            </span>
+          )}
         </div>
       </article>
     </Link>
@@ -112,9 +101,9 @@ export function DestinationCard({
 }
 
 /**
- * Large featured destination card for homepage hero sections
+ * Grid variant for 2x2 layout like mobile Atlas screen
  */
-export function DestinationCardFeatured({
+export function DestinationCardGrid({
   handle,
   name,
   region,
@@ -129,68 +118,56 @@ export function DestinationCardFeatured({
       href={`/destinations/${handle}`}
       className={cn("group block", className)}
     >
-      <article 
-        className="relative h-[500px] md:h-[600px] overflow-hidden"
-        style={{ borderRadius: "50% 50% 24px 24px / 20% 20% 0 0" }}
-      >
-        {/* Image */}
-        <Image
-          src={imageUrl}
-          alt={name}
-          fill
-          className="object-cover transition-all duration-1000 ease-out group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
-        
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-        
-        {/* Region Badge */}
-        <div className="absolute top-8 left-8 z-20">
-          <Badge 
-            variant="secondary" 
-            className="bg-white/95 backdrop-blur-sm text-stone-700 border-0 shadow-sm rounded-full px-5 py-2 text-xs uppercase tracking-wider font-semibold"
-          >
-            {region}
-          </Badge>
-        </div>
-        
-        {/* Content */}
-        <div className="absolute inset-x-0 bottom-0 p-8 md:p-12 z-20">
-          <h3 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white mb-3 group-hover:text-gold transition-colors drop-shadow-lg">
-            {name}
-          </h3>
+      <article>
+        {/* Portal Arch Image Container */}
+        <div 
+          className="relative aspect-[4/5] overflow-hidden bg-stone-200"
+          style={{ 
+            borderRadius: "50% 50% 12px 12px / 30% 30% 0 0",
+          }}
+        >
+          {/* Image */}
+          <Image
+            src={imageUrl}
+            alt={name}
+            fill
+            className="object-cover transition-all duration-700 ease-out group-hover:scale-105"
+            sizes="(max-width: 640px) 50vw, 25vw"
+          />
           
+          {/* Atmospheric overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+          
+          {/* Region Badge */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
+            <span className="bg-white/95 backdrop-blur-sm text-stone-700 text-[9px] uppercase tracking-[0.15em] font-semibold px-3 py-1 rounded-full shadow-sm">
+              {region}
+            </span>
+          </div>
+          
+          {/* Content */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
+            <h3 className="font-serif text-xl text-white mb-0.5 group-hover:text-gold transition-colors drop-shadow-lg">
+              {name}
+            </h3>
+            <span className="text-[10px] uppercase tracking-[0.1em] text-gold font-medium">
+              {coordinates}
+            </span>
+          </div>
+        </div>
+
+        {/* Info Below */}
+        <div className="pt-3 px-1">
           {tagline && (
-            <p className="text-lg text-white/80 italic mb-5 max-w-md font-serif">
+            <p className="text-xs text-stone-500 italic font-serif mb-1 line-clamp-1">
               "{tagline}"
             </p>
           )}
-          
-          <div className="flex items-center gap-6">
-            <span className="text-sm uppercase tracking-[0.2em] text-gold font-medium">
-              {coordinates}
+          {pieceCount !== undefined && (
+            <span className="text-[10px] uppercase tracking-[0.15em] text-gold font-semibold">
+              {pieceCount} Pieces
             </span>
-            
-            {pieceCount !== undefined && (
-              <>
-                <span className="w-px h-4 bg-white/30" />
-                <span className="text-sm uppercase tracking-[0.15em] text-white/60">
-                  {pieceCount} pieces available
-                </span>
-              </>
-            )}
-          </div>
-          
-          {/* Explore button on hover */}
-          <div className="mt-8 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-            <span className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm uppercase tracking-wider rounded-full hover:bg-white/20 transition-colors">
-              Explore Collection
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </span>
-          </div>
+          )}
         </div>
       </article>
     </Link>

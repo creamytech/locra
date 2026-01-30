@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/lib/shopify/types";
 import { cn } from "@/lib/utils";
-import { Heart, MapPin } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useFavorites } from "@/lib/context/FavoritesContext";
 
 interface PieceCardProps {
@@ -18,24 +17,30 @@ interface PieceCardProps {
 
 export function PieceCard({ product, priority = false, className, destination }: PieceCardProps) {
   const price = product.priceRange.minVariantPrice;
-  const hasEditionTag = product.tags.some((tag) =>
-    tag.toLowerCase().includes("edition")
-  );
   const { isFavorite, toggleFavorite } = useFavorites();
 
   // Extract destination from tags if not provided
   const productDestination = destination || product.tags.find(tag => 
-    ['santorini', 'kyoto', 'amalfi', 'marrakech'].includes(tag.toLowerCase())
+    ['santorini', 'kyoto', 'amalfi', 'marrakech', 'las vegas', 'santa monica'].some(d => 
+      tag.toLowerCase().includes(d)
+    )
   );
+
+  // Get a style label from tags (like "BEACH VIBES", "CASUAL STYLE")
+  const styleLabel = product.tags.find(tag => 
+    ['beach vibes', 'casual style', 'artistic tee', 'beach getaway', 'adventure', 'classic', 'vintage'].some(s => 
+      tag.toLowerCase().includes(s)
+    )
+  ) || product.productType || "Piece";
 
   return (
     <article className={cn("group relative", className)}>
       <Link href={`/products/${product.handle}`} className="block">
-        {/* Portal Arch Image Container - Full rounded top */}
+        {/* Portal Arch Image Container */}
         <div 
-          className="relative aspect-[3/4] overflow-hidden bg-gradient-to-b from-stone-100 to-stone-200"
+          className="relative aspect-[3/4] overflow-hidden bg-stone-100"
           style={{ 
-            borderRadius: "50% 50% 16px 16px / 35% 35% 0 0",
+            borderRadius: "50% 50% 16px 16px / 40% 40% 0 0",
           }}
         >
           {product.featuredImage ? (
@@ -49,48 +54,37 @@ export function PieceCard({ product, priority = false, className, destination }:
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-stone-300 italic font-serif">
-              Specimen Missing
+              Image Missing
             </div>
           )}
           
           {/* Inner shadow for depth */}
-          <div className="absolute inset-0 shadow-[inset_0_2px_20px_rgba(0,0,0,0.08)] pointer-events-none" />
-          
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 shadow-[inset_0_2px_20px_rgba(0,0,0,0.06)] pointer-events-none" />
         </div>
       </Link>
 
-      {/* Curved Destination Badge - Positioned at arch edge */}
-      {productDestination && (
-        <div className="absolute top-[15%] left-3 z-20">
-          <Badge 
-            variant="secondary" 
-            className="bg-white/95 backdrop-blur-sm text-stone-700 border-0 shadow-sm text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-full"
-          >
-            <MapPin className="w-2.5 h-2.5 mr-1.5" />
-            {productDestination}
-          </Badge>
-        </div>
-      )}
-      
-      {/* Edition Badge */}
-      {hasEditionTag && !productDestination && (
-        <div className="absolute top-[15%] left-3 z-20">
-          <Badge variant="gold" className="shadow-sm text-[10px]">
-            Limited
-          </Badge>
-        </div>
-      )}
+      {/* Curved Style Label - Following arch outline on left */}
+      <div 
+        className="absolute top-[8%] left-0 z-20 pointer-events-none"
+        style={{
+          writingMode: 'vertical-rl',
+          textOrientation: 'mixed',
+          transform: 'rotate(180deg)',
+        }}
+      >
+        <span className="text-[10px] uppercase tracking-[0.2em] text-stone-400 font-medium">
+          {styleLabel}
+        </span>
+      </div>
 
-      {/* Favorite Button - White circle on right */}
+      {/* Favorite Button - Top right */}
       <button
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
           toggleFavorite(product.handle);
         }}
-        className="absolute top-[15%] right-3 z-30 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
+        className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
         aria-label={isFavorite(product.handle) ? "Remove from favorites" : "Add to favorites"}
       >
         <Heart 
@@ -101,8 +95,8 @@ export function PieceCard({ product, priority = false, className, destination }:
         />
       </button>
 
-      {/* Product Info Section - White background below image */}
-      <div className="bg-white rounded-b-xl pt-5 pb-4 px-4 text-center -mt-4 relative z-10">
+      {/* Product Info Section - White background below */}
+      <div className="bg-white rounded-b-2xl pt-5 pb-4 px-3 text-center -mt-3 relative z-10 shadow-sm">
         {/* Product Type */}
         <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 font-medium mb-2">
           {product.productType || "Piece"}
@@ -110,18 +104,18 @@ export function PieceCard({ product, priority = false, className, destination }:
         
         {/* Product Name */}
         <Link href={`/products/${product.handle}`}>
-          <h3 className="font-serif text-base text-stone-900 group-hover:text-gold transition-colors duration-300 leading-tight mb-4">
+          <h3 className="font-serif text-sm text-stone-900 group-hover:text-gold transition-colors duration-300 leading-tight mb-3 line-clamp-2">
             {product.title}
           </h3>
         </Link>
         
         {/* Price with decorative dividers */}
         <div className="flex items-center justify-center gap-3">
-          <span className="flex-1 h-px bg-gradient-to-r from-transparent to-stone-200" />
+          <span className="flex-1 h-px bg-gradient-to-r from-transparent to-stone-200 max-w-8" />
           <p className="text-sm font-semibold text-stone-700">
             {formatPrice(price.amount, price.currencyCode)}
           </p>
-          <span className="flex-1 h-px bg-gradient-to-l from-transparent to-stone-200" />
+          <span className="flex-1 h-px bg-gradient-to-l from-transparent to-stone-200 max-w-8" />
         </div>
       </div>
     </article>
