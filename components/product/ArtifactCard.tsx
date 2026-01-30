@@ -7,7 +7,7 @@ import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/lib/shopify/types";
 import { cn } from "@/lib/utils";
 import { Heart, MapPin } from "lucide-react";
-import { useState } from "react";
+import { useFavorites } from "@/lib/context/FavoritesContext";
 
 interface PieceCardProps {
   product: Product;
@@ -21,7 +21,7 @@ export function PieceCard({ product, priority = false, className, destination }:
   const hasEditionTag = product.tags.some((tag) =>
     tag.toLowerCase().includes("edition")
   );
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   // Extract destination from tags if not provided
   const productDestination = destination || product.tags.find(tag => 
@@ -87,15 +87,16 @@ export function PieceCard({ product, priority = false, className, destination }:
       <button
         onClick={(e) => {
           e.preventDefault();
-          setIsFavorite(!isFavorite);
+          e.stopPropagation();
+          toggleFavorite(product.handle);
         }}
         className="absolute top-[15%] right-3 z-30 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
-        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        aria-label={isFavorite(product.handle) ? "Remove from favorites" : "Add to favorites"}
       >
         <Heart 
           className={cn(
             "w-4 h-4 transition-colors",
-            isFavorite ? "fill-red-500 text-red-500" : "text-stone-400"
+            isFavorite(product.handle) ? "fill-red-500 text-red-500" : "text-stone-400"
           )} 
         />
       </button>

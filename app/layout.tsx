@@ -7,6 +7,7 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { ReferralProvider } from "@/components/loyalty";
 import { AuthProvider } from "@/components/auth";
+import { FavoritesProvider } from "@/lib/context/FavoritesContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -89,15 +90,17 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="min-h-screen flex flex-col">
         <AuthProvider>
-          <CartProvider>
-            <ReferralProvider>
-              <TopNavWrapper />
-              <main className="flex-1">
-                <PageTransition>{children}</PageTransition>
-              </main>
-              <Footer />
-            </ReferralProvider>
-          </CartProvider>
+          <FavoritesProvider>
+            <CartProvider>
+              <ReferralProvider>
+                <TopNavWrapper />
+                <main className="flex-1">
+                  <PageTransition>{children}</PageTransition>
+                </main>
+                <Footer />
+              </ReferralProvider>
+            </CartProvider>
+          </FavoritesProvider>
         </AuthProvider>
       </body>
     </html>
