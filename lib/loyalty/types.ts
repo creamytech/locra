@@ -281,6 +281,8 @@ export interface ShopifyOrderWebhook {
     title: string;
     vendor: string;
     properties: Array<{ name: string; value: string }>;
+    // Product metafields included via webhook configuration
+    // Requires setting up the webhook to include `product.metafields.custom.destination`
   }>;
   shipping_address?: {
     address1: string;
@@ -292,4 +294,16 @@ export interface ShopifyOrderWebhook {
   };
   fulfillment_status: string | null;
   financial_status: string;
+}
+
+// Extended line item type for Admin API queries (with metafields)
+export interface ShopifyOrderLineItemWithMetafields {
+  product_id: number;
+  variant_id: number;
+  title: string;
+  vendor: string;
+  properties: Array<{ name: string; value: string }>;
+  // Custom product metafields
+  destination?: string; // Metafield: custom.destination
+  stamp_name?: string;  // Metafield: custom.stamp_name (alternative)
 }

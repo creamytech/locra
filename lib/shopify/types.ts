@@ -55,6 +55,11 @@ export interface Product {
     title: string | null;
     description: string | null;
   };
+  // Loyalty system metafields for passport stamps
+  destination?: { value: string } | null;
+  stampName?: { value: string } | null;
+  // Badge metafield for curved text labels
+  badge?: { value: string } | null;
 }
 
 // ============================================================================
@@ -204,6 +209,11 @@ export interface ShopifyProduct {
     title: string | null;
     description: string | null;
   };
+  // Loyalty system metafields for passport stamps
+  destination?: { value: string } | null;
+  stampName?: { value: string } | null;
+  // Badge metafield for curved text labels
+  badge?: { value: string } | null;
 }
 
 export interface ShopifyCollection {

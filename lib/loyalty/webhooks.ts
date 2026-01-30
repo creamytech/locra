@@ -260,30 +260,116 @@ export async function handleCustomerCreate(req: NextRequest): Promise<NextRespon
 
 // =====================================================
 // HELPER: Extract Destinations from Order
+// Fetches metafields via Admin API for accurate stamp tracking
 // =====================================================
 
-function extractDestinationsFromOrder(order: ShopifyOrderWebhook): string[] {
+async function extractDestinationsFromOrder(order: ShopifyOrderWebhook): Promise<string[]> {
   const destinations = new Set<string>();
+  const productIds = order.line_items.map(item => item.product_id);
 
+  // Try to fetch product metafields via Admin API
+  const metafieldDestinations = await fetchProductDestinationMetafields(productIds);
+  
   for (const item of order.line_items) {
-    // Check vendor field (e.g., "Santorini Collection")
-    if (item.vendor) {
-      const vendorLower = item.vendor.toLowerCase();
-      if (vendorLower.includes('santorini')) destinations.add('santorini');
-      if (vendorLower.includes('amalfi')) destinations.add('amalfi');
-      if (vendorLower.includes('kyoto')) destinations.add('kyoto');
-      if (vendorLower.includes('marrakech')) destinations.add('marrakech');
+    // Priority 1: Metafield from Admin API query
+    const metafieldDest = metafieldDestinations.get(item.product_id);
+    if (metafieldDest) {
+      destinations.add(metafieldDest.toLowerCase());
+      continue;
     }
 
-    // Check product properties for destination tag
+    // Priority 2: Check line item properties (set at cart time)
     for (const prop of item.properties || []) {
-      if (prop.name === '_destination' && prop.value) {
+      if ((prop.name === '_destination' || prop.name === 'destination') && prop.value) {
         destinations.add(prop.value.toLowerCase());
+      }
+    }
+
+    // Priority 3: Fallback to vendor field parsing
+    if (item.vendor) {
+      const vendorLower = item.vendor.toLowerCase();
+      const knownDestinations = ['santorini', 'amalfi', 'kyoto', 'marrakech', 'las-vegas', 'santa-monica'];
+      for (const dest of knownDestinations) {
+        if (vendorLower.includes(dest.replace('-', ' ')) || vendorLower.includes(dest)) {
+          destinations.add(dest);
+          break;
+        }
       }
     }
   }
 
   return Array.from(destinations);
+}
+
+// Fetch destination metafields from Shopify Admin API
+async function fetchProductDestinationMetafields(productIds: number[]): Promise<Map<number, string>> {
+  const results = new Map<number, string>();
+  
+  const adminAccessToken = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
+  const shopDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+  
+  if (!adminAccessToken || !shopDomain) {
+    console.warn('Admin API not configured, skipping metafield fetch');
+    return results;
+  }
+
+  // Batch query products with their metafields
+  try {
+    const query = `
+      query GetProductMetafields($ids: [ID!]!) {
+        nodes(ids: $ids) {
+          ... on Product {
+            id
+            legacyResourceId
+            destination: metafield(namespace: "custom", key: "destination") {
+              value
+            }
+            stampName: metafield(namespace: "custom", key: "stamp_name") {
+              value
+            }
+          }
+        }
+      }
+    `;
+
+    // Convert numeric IDs to GraphQL IDs
+    const graphqlIds = productIds.map(id => `gid://shopify/Product/${id}`);
+
+    const response = await fetch(`https://${shopDomain}/admin/api/2024-01/graphql.json`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Access-Token': adminAccessToken,
+      },
+      body: JSON.stringify({
+        query,
+        variables: { ids: graphqlIds },
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Admin API request failed:', response.status);
+      return results;
+    }
+
+    const data = await response.json();
+    
+    for (const node of data.data?.nodes || []) {
+      if (!node) continue;
+      
+      const legacyId = parseInt(node.legacyResourceId);
+      // Use destination or stamp_name metafield
+      const destination = node.destination?.value || node.stampName?.value;
+      
+      if (destination) {
+        results.set(legacyId, destination);
+      }
+    }
+  } catch (error) {
+    console.error('Failed to fetch product metafields:', error);
+  }
+
+  return results;
 }
 
 // =====================================================

@@ -420,15 +420,15 @@ export function ProductExpandableCards({ products, className }: ProductExpandabl
       {/* Grid of Cards - Portal Arch Styling like PieceCard */}
       <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16 ${className || ''}`}>
         {products.map((product) => {
-          // Get destination from tags
-          const destination = product.tags.find(tag => 
+          // Get destination from metafield or tags
+          const destination = product.destination?.value || product.tags.find(tag => 
             ['santorini', 'kyoto', 'amalfi', 'marrakech', 'las vegas', 'santa monica'].some(d => 
               tag.toLowerCase().includes(d)
             )
           );
           
-          // Get style label from tags
-          const styleLabel = product.tags.find(tag => 
+          // Get style label from metafield first, then tags, then fallback
+          const styleLabel = product.badge?.value || product.tags.find(tag => 
             ['beach vibes', 'casual style', 'artistic tee', 'beach getaway', 'adventure', 'classic', 'vintage'].some(s => 
               tag.toLowerCase().includes(s)
             )

@@ -69,6 +69,17 @@ export const PRODUCT_FRAGMENT = `
       title
       description
     }
+    # Loyalty system metafields for passport stamps
+    destination: metafield(namespace: "custom", key: "destination") {
+      value
+    }
+    stampName: metafield(namespace: "custom", key: "stamp_name") {
+      value
+    }
+    # Badge metafield for curved text labels (e.g., "Beach Vibes", "Casual Style")
+    badge: metafield(namespace: "custom", key: "badge") {
+      value
+    }
   }
 `;
 

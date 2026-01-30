@@ -23,7 +23,7 @@ export function SuitcaseButton({ variant = "dark", className }: SuitcaseButtonPr
         className={cn(
           "relative group px-2 flex items-center gap-2 transition-all",
           variant === "white" 
-            ? "text-white hover:bg-white/10" 
+            ? "text-white hover:bg-white/20 hover:text-white" 
             : "text-stone-700 hover:bg-stone-100",
           className
         )}

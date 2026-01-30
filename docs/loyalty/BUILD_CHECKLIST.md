@@ -79,8 +79,17 @@ export async function GET(req: NextRequest) {
 
 ### 3.1 Product Tagging
 
-- [ ] Add `destination` metafield to products in Shopify
-- [ ] Tag products with destination handle (e.g., `santorini`, `amalfi`)
+- [x] Add `destination` metafield to product queries (code ready)
+- [x] Add `badge` metafield for curved text labels (code ready)
+- [x] Update webhook to read destination metafields via Admin API
+- [ ] **MANUAL**: Create metafield definitions in Shopify Admin:
+  - **Destination** (for passport stamps):
+    - Namespace: `custom`, Key: `destination` (single line text)
+    - Values: `santorini`, `amalfi`, `kyoto`, `marrakech`, `las-vegas`, `santa-monica`
+  - **Badge** (for curved text labels):
+    - Namespace: `custom`, Key: `badge` (single line text)
+    - Values: `Beach Vibes`, `Casual Style`, `Adventure`, `Classic`, etc.
+- [ ] **MANUAL**: Add metafield values to products in Shopify Admin
 
 ### 3.2 Discount Code Integration
 

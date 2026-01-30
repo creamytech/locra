@@ -74,11 +74,11 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
             <ul className="space-y-8">
               {cart.lines.map((line) => (
                 <li key={line.id} className="group flex gap-6 animate-fade-in">
-                  {/* Image with Arch Masking Style */}
+                  {/* Image with Portal Arch Style - matching product page */}
                   <Link
                     href={`/products/${line.merchandise.product.handle}`}
-                    className="relative h-28 w-24 flex-shrink-0 overflow-hidden bg-white border border-stone-100"
-                    style={{ borderRadius: "2rem 2rem 0 0" }}
+                    className="relative h-28 w-20 flex-shrink-0 overflow-hidden bg-stone-50"
+                    style={{ borderRadius: "50% 50% 8px 8px / 35% 35% 0 0" }}
                     onClick={() => onOpenChange(false)}
                   >
                     {line.merchandise.product.featuredImage ? (
@@ -87,10 +87,10 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                         alt={line.merchandise.product.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
-                        sizes="100px"
+                        sizes="80px"
                       />
                     ) : (
-                      <div className="w-full h-full bg-stone-50" />
+                      <div className="w-full h-full bg-stone-100" />
                     )}
                   </Link>
 
