@@ -31,23 +31,20 @@ export function PieceCard({ product, priority = false, className, destination }:
   return (
     <article className={cn("group relative", className)}>
       <Link href={`/products/${product.handle}`} className="block">
-        {/* Portal Arch Image Container */}
+        {/* Portal Arch Image Container - Full rounded top */}
         <div 
           className="relative aspect-[3/4] overflow-hidden bg-gradient-to-b from-stone-100 to-stone-200"
           style={{ 
-            borderRadius: "50% 50% 0 0 / 30% 30% 0 0",
+            borderRadius: "50% 50% 16px 16px / 35% 35% 0 0",
           }}
         >
-          {/* Inner shadow for depth */}
-          <div className="absolute inset-0 z-10 pointer-events-none shadow-[inset_0_0_60px_rgba(0,0,0,0.08)]" />
-          
           {product.featuredImage ? (
             <Image
               src={product.featuredImage.url}
               alt={product.featuredImage.altText || product.title}
               fill
-              className="object-cover transition-all duration-1000 ease-out group-hover:scale-110 opacity-90 group-hover:opacity-100"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover transition-all duration-700 ease-out group-hover:scale-105"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               priority={priority}
             />
           ) : (
@@ -56,43 +53,43 @@ export function PieceCard({ product, priority = false, className, destination }:
             </div>
           )}
           
+          {/* Inner shadow for depth */}
+          <div className="absolute inset-0 shadow-[inset_0_2px_20px_rgba(0,0,0,0.08)] pointer-events-none" />
+          
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-          
-          {/* Top Badges Row */}
-          <div className="absolute top-4 left-4 right-4 z-20 flex justify-between items-start">
-            {/* Destination Badge */}
-            {productDestination && (
-              <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm text-stone-700 border-0 shadow-sm">
-                <MapPin className="w-3 h-3 mr-1" />
-                {productDestination}
-              </Badge>
-            )}
-            
-            {/* Edition Badge */}
-            {hasEditionTag && !productDestination && (
-              <Badge variant="gold" className="shadow-luxury-sm">
-                Limited
-              </Badge>
-            )}
-          </div>
-          
-          {/* Quick View indicator on hover */}
-          <div className="absolute bottom-5 left-0 right-0 z-20 flex justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500">
-            <span className="px-4 py-2 bg-white/95 backdrop-blur-sm text-micro uppercase tracking-[0.2em] text-stone-700 rounded-full">
-              View Piece
-            </span>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         </div>
       </Link>
 
-      {/* Favorite Button - Outside Link for separate click handling */}
+      {/* Curved Destination Badge - Positioned at arch edge */}
+      {productDestination && (
+        <div className="absolute top-[15%] left-3 z-20">
+          <Badge 
+            variant="secondary" 
+            className="bg-white/95 backdrop-blur-sm text-stone-700 border-0 shadow-sm text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-full"
+          >
+            <MapPin className="w-2.5 h-2.5 mr-1.5" />
+            {productDestination}
+          </Badge>
+        </div>
+      )}
+      
+      {/* Edition Badge */}
+      {hasEditionTag && !productDestination && (
+        <div className="absolute top-[15%] left-3 z-20">
+          <Badge variant="gold" className="shadow-sm text-[10px]">
+            Limited
+          </Badge>
+        </div>
+      )}
+
+      {/* Favorite Button - White circle on right */}
       <button
         onClick={(e) => {
           e.preventDefault();
           setIsFavorite(!isFavorite);
         }}
-        className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
+        className="absolute top-[15%] right-3 z-30 w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
         aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
       >
         <Heart 
@@ -103,24 +100,28 @@ export function PieceCard({ product, priority = false, className, destination }:
         />
       </button>
 
-      {/* Product Details */}
-      <div className="space-y-3 text-center px-2 pt-6">
+      {/* Product Info Section - White background below image */}
+      <div className="bg-white rounded-b-xl pt-5 pb-4 px-4 text-center -mt-4 relative z-10">
         {/* Product Type */}
-        <p className="text-micro uppercase tracking-[0.3em] text-stone-400 font-medium">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 font-medium mb-2">
           {product.productType || "Piece"}
         </p>
         
         {/* Product Name */}
         <Link href={`/products/${product.handle}`}>
-          <h3 className="font-serif text-lg text-stone-900 group-hover:text-gold transition-colors duration-400">
+          <h3 className="font-serif text-base text-stone-900 group-hover:text-gold transition-colors duration-300 leading-tight mb-4">
             {product.title}
           </h3>
         </Link>
         
-        {/* Price */}
-        <p className="text-sm font-medium text-gold">
-          {formatPrice(price.amount, price.currencyCode)}
-        </p>
+        {/* Price with decorative dividers */}
+        <div className="flex items-center justify-center gap-3">
+          <span className="flex-1 h-px bg-gradient-to-r from-transparent to-stone-200" />
+          <p className="text-sm font-semibold text-stone-700">
+            {formatPrice(price.amount, price.currencyCode)}
+          </p>
+          <span className="flex-1 h-px bg-gradient-to-l from-transparent to-stone-200" />
+        </div>
       </div>
     </article>
   );
@@ -135,8 +136,8 @@ export function PieceCardMini({ product }: { product: Product }) {
   return (
     <Link href={`/products/${product.handle}`} className="group flex items-center gap-5 p-3 -m-3 rounded-lg hover:bg-stone-50 transition-colors duration-300">
       <div 
-        className="relative w-16 h-20 overflow-hidden bg-stone-100 flex-shrink-0"
-        style={{ borderRadius: "50% 50% 0 0 / 40% 40% 0 0" }}
+        className="relative w-14 h-[72px] overflow-hidden bg-stone-100 flex-shrink-0"
+        style={{ borderRadius: "50% 50% 8px 8px / 40% 40% 0 0" }}
       >
         {product.featuredImage ? (
           <Image
@@ -144,20 +145,20 @@ export function PieceCardMini({ product }: { product: Product }) {
             alt={product.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="64px"
+            sizes="56px"
           />
         ) : (
           <div className="w-full h-full bg-stone-100" />
         )}
       </div>
       <div className="space-y-1 min-w-0">
-        <p className="text-micro uppercase tracking-[0.15em] text-stone-400 font-medium truncate">
+        <p className="text-[9px] uppercase tracking-[0.15em] text-stone-400 font-medium truncate">
           {product.productType || "Piece"}
         </p>
         <h4 className="text-sm font-serif text-stone-900 group-hover:text-gold transition-colors truncate">
           {product.title}
         </h4>
-        <p className="text-xs text-gold font-medium">
+        <p className="text-xs font-semibold text-stone-600">
           {formatPrice(price.amount, price.currencyCode)}
         </p>
       </div>
@@ -180,10 +181,10 @@ export function PieceCardHorizontal({
   const price = product.priceRange.minVariantPrice;
 
   return (
-    <div className="flex gap-5 p-4 bg-white border border-stone-100 rounded-lg">
+    <div className="flex gap-5 p-4 bg-white border border-stone-100 rounded-xl">
       <div 
         className="relative w-20 h-24 overflow-hidden bg-stone-50 flex-shrink-0"
-        style={{ borderRadius: "50% 50% 0 0 / 30% 30% 0 0" }}
+        style={{ borderRadius: "50% 50% 8px 8px / 30% 30% 0 0" }}
       >
         {product.featuredImage && (
           <Image
@@ -197,7 +198,7 @@ export function PieceCardHorizontal({
       </div>
       <div className="flex-1 flex flex-col justify-between min-w-0">
         <div>
-          <p className="text-micro uppercase tracking-[0.15em] text-stone-400 font-medium">
+          <p className="text-[9px] uppercase tracking-[0.15em] text-stone-400 font-medium">
             {product.productType || "Piece"}
           </p>
           <h4 className="font-serif text-stone-900 truncate">
@@ -205,14 +206,14 @@ export function PieceCardHorizontal({
           </h4>
         </div>
         <div className="flex items-center justify-between">
-          <p className="text-sm text-gold font-medium">
+          <p className="text-sm font-semibold text-stone-700">
             {formatPrice(price.amount, price.currencyCode)}
-            {quantity && quantity > 1 && <span className="text-stone-400 ml-2">× {quantity}</span>}
+            {quantity && quantity > 1 && <span className="text-stone-400 font-normal ml-2">× {quantity}</span>}
           </p>
           {onRemove && (
             <button 
               onClick={onRemove}
-              className="text-micro text-stone-400 hover:text-stone-600 uppercase tracking-wider"
+              className="text-[10px] text-stone-400 hover:text-stone-600 uppercase tracking-wider"
             >
               Remove
             </button>

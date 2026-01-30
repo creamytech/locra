@@ -130,12 +130,12 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
       </section>
 
       {/* ================================================
-          2. THE ATLAS GATEWAY GRID - WOBBLE CARDS
+          2. THE ATLAS GATEWAY - HORIZONTAL SCROLL CAROUSEL
           ================================================ */}
-      <section id="destinations" className="section-spacing bg-background">
+      <section id="destinations" className="section-spacing bg-background overflow-hidden">
         <div className="container-wide">
           {/* Section Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
             <div className="max-w-2xl">
               <p className="label-gold mb-4">Shop by Destination</p>
               <h2 className="font-serif text-display mb-6 leading-tight">
@@ -154,12 +154,13 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
               <ArrowRight className="w-4 h-4 transition-transform duration-400 group-hover:translate-x-2" aria-hidden="true" />
             </Link>
           </div>
+        </div>
 
-          {/* Destinations Grid with Portal Arch Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {DESTINATIONS.map((dest) => (
+        {/* Destinations Horizontal Scroll - Full bleed on mobile */}
+        <div className="flex gap-6 overflow-x-auto pb-4 pl-6 pr-6 lg:pl-[max(1.5rem,calc((100%-1280px)/2+1.5rem))] scrollbar-hide snap-x snap-mandatory">
+          {DESTINATIONS.map((dest) => (
+            <div key={dest.handle} className="snap-start">
               <DestinationCard
-                key={dest.handle}
                 handle={dest.handle}
                 name={dest.name}
                 region={dest.region}
@@ -167,8 +168,8 @@ export function HomePageClient({ featuredProducts }: HomePageClientProps) {
                 imageUrl={dest.thumbnailUrl}
                 tagline={dest.tagline}
               />
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
